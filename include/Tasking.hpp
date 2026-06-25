@@ -52,7 +52,7 @@ static void blinkTask(void * pvParameters) {
 
     // Write the LED state to the LED pin 
     digitalWriteFast(IOConstants::ledBuiltIn, ledState ? arduino::HIGH : arduino::LOW);
-    vTaskDelay(pdTICKS_TO_MS(500 / IOConstants::ledBlinkFrequency));
+    vTaskDelay(pdMS_TO_TICKS(500 / IOConstants::ledBlinkFrequency));
 
     // Take the telemetry mutex if available 
     if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
@@ -88,7 +88,7 @@ static void messageTask(void * pvParameters) {
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
     }
 
-    vTaskDelay(pdTICKS_TO_MS(50));
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
 
   // Delete the task if the while loop exits
@@ -102,18 +102,18 @@ static void messageTask(void * pvParameters) {
 static void rcTask(void * pvParameters) {
   Signals::ControlRC transmitter;
 
-  while (true) {
+  while (true) {  
     if (!transmitter.update()) {
       Queues::logWrite("Awaiting valid SBUS frame...");
     } else {
-      if (xSemaphoreTake(Mutexes::rcMutex, 0) == pdTRUE) {
+      if (xSemaphoreTake(Mutexes::rcMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
         MutexValues::transmitterValues.update(&transmitter);
 
         xSemaphoreGive(Mutexes::rcMutex);
       }
     }
 
-    vTaskDelay(pdTICKS_TO_MS(1'000 / IOConstants::updateFrequency));
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
   }
 
   vTaskDelete(nullptr);

@@ -29,7 +29,7 @@ namespace RTOS {
      * @param msg Message to write as a char pointer
      */
     static void logWrite(const char * msg) {
-      xQueueSend(logQueue, (void *)&msg, pdTICKS_TO_MS(10));
+      xQueueSend(logQueue, (void *)&msg, pdMS_TO_TICKS(10));
     }
   };
 
