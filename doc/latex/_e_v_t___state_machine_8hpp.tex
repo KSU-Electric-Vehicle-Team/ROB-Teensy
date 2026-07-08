@@ -1,0 +1,51 @@
+\doxysection{lib/\+\+EVT\+\_\+\+State\+Machine/\+\+EVT\+\_\+\+State\+Machine.hpp File Reference}
+\hypertarget{_e_v_t___state_machine_8hpp}{}\label{_e_v_t___state_machine_8hpp}\index{lib/EVT\_StateMachine/EVT\_StateMachine.hpp@{lib/EVT\_StateMachine/EVT\_StateMachine.hpp}}
+
+
+Header for State\+Machine class.  
+
+
+{\ttfamily \+\#include "{}arduino\+\_\+freertos.\+h"{}}\newline
+{\ttfamily \+\#include $<$map$>$}\newline
+{\ttfamily \+\#include $<$functional$>$}\newline
+{\ttfamily \+\#include "{}Queues.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_signals_1_1state__t}{Signals::\+state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Struct used for control over states. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_signals_1_1_state_machine}{Signals::\+\+State\+Machine}}
+\begin{DoxyCompactList}\small\item\em Class used for definition and control of a state machine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_signals}{Signals}}
+\begin{DoxyCompactList}\small\item\em Namespace used for commuinications drivers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}\label{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25} 
+enum \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{Signals::\+\+States}} :\+ uint8\+\_\+t \{ \newline
+{\bfseries NONE} = 0
+, {\bfseries IDLE}
+, {\bfseries RC}
+, {\bfseries AUTO}
+, \newline
+{\bfseries ERROR}
+, {\bfseries STOP}
+, {\bfseries RESET}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum used to denote the current state of the system. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header for State\+Machine class. 
+
+The State\+Machine class is used for control of a system with predefined states. Through its use, multiple states can be defined an run easily.
+
+\begin{DoxyAuthor}{Author}
+Lilia Turbeville 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+July 1, 2026 
+\end{DoxyDate}

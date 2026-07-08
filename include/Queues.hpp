@@ -16,6 +16,9 @@
 #include "arduino_freertos.h"
 #include "semphr.h"
 
+/**
+ * @brief Namespace used for general RTOS values, types, and methods
+ */
 namespace RTOS {
   /**
    * @brief Struct used to hold queues used through the codebase

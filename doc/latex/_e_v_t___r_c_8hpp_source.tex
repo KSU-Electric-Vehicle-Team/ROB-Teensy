@@ -1,0 +1,110 @@
+\doxysection{EVT\+\_\+\+RC.\+hpp}
+\hypertarget{_e_v_t___r_c_8hpp_source}{}\label{_e_v_t___r_c_8hpp_source}\index{lib/EVT\_RC/EVT\_RC.hpp@{lib/EVT\_RC/EVT\_RC.hpp}}
+\doxymbox{\hyperlink{_e_v_t___r_c_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ EVT\_RC}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ EVT\_RC}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}\textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <sbus.h>}}
+\DoxyCodeLine{00020\ \textcolor{keyword}{using\ }bfs::SbusRx;}
+\DoxyCodeLine{00021\ \textcolor{keyword}{using\ }bfs::SbusData;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_transmitter_constants_8hpp}{TransmitterConstants.hpp}}>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_i_o_constants_8hpp}{IOConstants.hpp}}>}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{using\ namespace\ }\doxymbox{\hyperlink{namespace_constants}{Constants}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_queues_8hpp}{Queues.hpp}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues}{RTOS::Queues}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_signals}{Signals}}\ \{}
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{typedef}\ enum\ :\ uint16\_t\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ RIGHT\_X\ =\ 0,\ \textcolor{comment}{//\ Joystick\ axis\ for\ steering}}
+\DoxyCodeLine{00036\ \ \ \ \ RIGHT\_Y,\ \ \ \ \ \textcolor{comment}{//\ Unassigned\ joystick\ axis\ }}
+\DoxyCodeLine{00037\ \ \ \ \ LEFT\_Y,\ \ \ \ \ \ \textcolor{comment}{//\ Joystick\ axis\ for\ throttle\ and\ brake}}
+\DoxyCodeLine{00038\ \ \ \ \ LEFT\_X,\ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ joystick\ axis}}
+\DoxyCodeLine{00039\ \ \ \ \ SWA,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Toggle\ switch\ for\ calibration\ }}
+\DoxyCodeLine{00040\ \ \ \ \ SWB,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ three\ state\ toggle\ switch}}
+\DoxyCodeLine{00041\ \ \ \ \ SWC,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ toggle\ switch}}
+\DoxyCodeLine{00042\ \ \ \ \ SWD,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Toggle\ switch\ for\ entering\ AUTO}}
+\DoxyCodeLine{00043\ \ \ \ \ SWF,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Toggle\ switch\ for\ entering\ RC\ }}
+\DoxyCodeLine{00044\ \ \ \ \ SWE,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ three\ state\ toggle\ switch}}
+\DoxyCodeLine{00045\ \ \ \ \ SWH,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Momentary\ toggle\ switch\ for\ reset\ }}
+\DoxyCodeLine{00046\ \ \ \ \ SWG,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ three\ state\ toggle\ switch}}
+\DoxyCodeLine{00047\ \ \ \ \ VRA,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassinged\ variable\ knob}}
+\DoxyCodeLine{00048\ \ \ \ \ VRB,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob\ }}
+\DoxyCodeLine{00049\ \ \ \ \ VRC,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob}}
+\DoxyCodeLine{00050\ \ \ \ \ VRD\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob}}
+\DoxyCodeLine{00051\ \ \ \}\ \doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00057\ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a0674b56a443283e53166df494733b720}{ControlRC}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ channelPrint[32];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Channel\ Serial\ print\ buffer}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ SbusRx\ sbusRX\ \{\&IOConstants::sBusSerial\};\ \ \ \ \ \ \ \ \textcolor{comment}{//\ SBUS\ receiver\ pin}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ SbusData\ data;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SBUS\ data\ instance}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ lastValidFrame\ =\ 0UL;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Timestamp\ of\ the\ last\ frame\ }}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ validFrameTimeout\ =\ 1'000UL;\ \textcolor{comment}{//\ Maximum\ allowed\ time\ between\ valid\ frames}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ uint16\_t\ channelVal[TransmitterConstants::numChannels];\ \textcolor{comment}{//\ Values\ of\ each\ RC\ channel\ as\ an\ array}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ uint16\_t\ nextValues[TransmitterConstants::numChannels];\ \textcolor{comment}{//\ Values\ of\ the\ next\ RC\ channels}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ uint16\_t\ joystickMap[2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ joystick\ map}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ uint16\_t\ switchMap[2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ toggle\ switch\ map}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ uint16\_t\ triSwitchMap[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ three\ state\ switch\ map}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ uint16\_t\ knobMap[2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ knob\ map}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ hasValidFrame;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ enum\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ JOYSTICK\ =\ 0,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ SWITCH,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ TRI\_SWITCH,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ KNOB}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}{mapType}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a0674b56a443283e53166df494733b720}{ControlRC}}();}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_ae3dfd6f05360c6ddb5411d4036e7e26a}{setMapping}}(\textcolor{keyword}{const}\ uint16\_t\ mapArray[2],\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}{mapType}}\ mappingType);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0}{update}}();\ \ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474}{printChannel}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ isMapped\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ uint16\_t\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ mapChannel\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ T\ (*mapFunction)(uint16\_t))\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mapFunction(channelVal[channel]);}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T,\ \textcolor{keyword}{typename}\ F>}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ F\&\&\ mapLambda)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mapLambda(channelVal[channel]);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \}\ }
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ SbusData\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a5e138ad7a3ee320f24518dcb6bca3887}{getData}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a73d55d51da2458d08b4e02128982274a}{mapSwitches}}(uint16\_t\ val);}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \textcolor{keyword}{static}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a023c949cdbd73fc2bc483b68811c08b9}{mapToPercent}}(T\ value,\ \textcolor{keyword}{const}\ T\ (\&mapArray)[2]);}
+\DoxyCodeLine{00187\ \ \ \};}
+\DoxyCodeLine{00188\ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ EVT\_RC}}
+
+\end{DoxyCode}

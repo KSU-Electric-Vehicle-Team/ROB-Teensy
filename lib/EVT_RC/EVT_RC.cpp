@@ -131,7 +131,7 @@ namespace Signals {
   }
 
 
-  SbusData ControlRC::getData() {
+  SbusData ControlRC::getData() const {
     return data;
   }
 

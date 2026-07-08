@@ -162,7 +162,7 @@ namespace Signals {
        * 
        * @return The data from the SBUS UART 
        */
-      SbusData getData();
+      SbusData getData() const;
 
 
       /**

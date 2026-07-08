@@ -120,4 +120,18 @@ static void rcTask(void * pvParameters) {
 }
 
 
+/**
+ * @brief Task used to update and run the state machine
+ */
+static void stateMachineTask(void * pvParameters) {
+  Signals::StateMachine stateMachine;
+
+  while (true) {
+    
+  }
+
+  vTaskDelete(nullptr);
+}
+
+
 #endif // TASKING

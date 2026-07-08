@@ -1,0 +1,27 @@
+\doxysection{Queues.\+hpp}
+\hypertarget{_queues_8hpp_source}{}\label{_queues_8hpp_source}\index{include/Queues.hpp@{include/Queues.hpp}}
+\doxymbox{\hyperlink{_queues_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ QUEUES}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ QUEUES}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}\textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}arduino\_freertos.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}semphr.h"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_r_t_o_s}{RTOS}}\ \{}
+\DoxyCodeLine{00026\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues}{Queues}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{static}\ QueueHandle\_t\ logQueue;\ \textcolor{comment}{//\ Queue\ for\ Serial\ Monitor\ output}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues_ab9e03e1da82fb2a4be1c56085e176300}{logWrite}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ msg)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ xQueueSend(logQueue,\ (\textcolor{keywordtype}{void}\ *)\&msg,\ pdMS\_TO\_TICKS(10));}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ QueueHandle\_t\ Queues::logQueue\ =\ xQueueCreate(16,\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*));}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ QUEUES}}
+
+\end{DoxyCode}

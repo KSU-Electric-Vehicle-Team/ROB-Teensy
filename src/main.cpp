@@ -46,6 +46,15 @@ void setup() {
     NULL
   );
 
+  xTaskCreate( // Create a task to handle the state machine
+    stateMachineTask,
+    "State Machine Task",
+    128,
+    NULL,
+    4,
+    NULL
+  ); 
+
   // Start the RTOS scheduler
   vTaskStartScheduler();  
 

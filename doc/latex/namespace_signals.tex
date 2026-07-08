@@ -1,0 +1,58 @@
+\doxysection{Signals Namespace Reference}
+\hypertarget{namespace_signals}{}\label{namespace_signals}\index{Signals@{Signals}}
+
+
+Namespace used for commuinications drivers.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_signals_1_1_control_r_c}{Control\+RC}}
+\begin{DoxyCompactList}\small\item\em Class used to receive and interpret SBUS data. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_signals_1_1state__t}{state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Struct used for control over states. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_signals_1_1_state_machine}{State\+Machine}}
+\begin{DoxyCompactList}\small\item\em Class used for definition and control of a state machine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespace_signals_a258f0a4d513f145e30a1ea005a746989}\label{namespace_signals_a258f0a4d513f145e30a1ea005a746989} 
+enum \doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{Channel\+RC}} :\+ uint16\+\_\+t \{ \newline
+{\bfseries RIGHT\+\_\+X} = 0
+, {\bfseries RIGHT\+\_\+Y}
+, {\bfseries LEFT\+\_\+Y}
+, {\bfseries LEFT\+\_\+X}
+, \newline
+{\bfseries SWA}
+, {\bfseries SWB}
+, {\bfseries SWC}
+, {\bfseries SWD}
+, \newline
+{\bfseries SWF}
+, {\bfseries SWE}
+, {\bfseries SWH}
+, {\bfseries SWG}
+, \newline
+{\bfseries VRA}
+, {\bfseries VRB}
+, {\bfseries VRC}
+, {\bfseries VRD}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum used for selection of RC channel values. \end{DoxyCompactList}\item 
+\Hypertarget{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}\label{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25} 
+enum \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} :\+ uint8\+\_\+t \{ \newline
+{\bfseries NONE} = 0
+, {\bfseries IDLE}
+, {\bfseries RC}
+, {\bfseries AUTO}
+, \newline
+{\bfseries ERROR}
+, {\bfseries STOP}
+, {\bfseries RESET}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum used to denote the current state of the system. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Namespace used for commuinications drivers. 
