@@ -19,7 +19,7 @@
 \DoxyCodeLine{00028\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues}{RTOS::Queues}};}
 \DoxyCodeLine{00029\ }
 \DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_signals}{Signals}}\ \{}
-\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{typedef}\ enum\ :\ uint16\_t\ \{}
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{typedef}\ enum\ :\ uint8\_t\ \{}
 \DoxyCodeLine{00035\ \ \ \ \ RIGHT\_X\ =\ 0,\ \textcolor{comment}{//\ Joystick\ axis\ for\ steering}}
 \DoxyCodeLine{00036\ \ \ \ \ RIGHT\_Y,\ \ \ \ \ \textcolor{comment}{//\ Unassigned\ joystick\ axis\ }}
 \DoxyCodeLine{00037\ \ \ \ \ LEFT\_Y,\ \ \ \ \ \ \textcolor{comment}{//\ Joystick\ axis\ for\ throttle\ and\ brake}}
@@ -36,7 +36,7 @@
 \DoxyCodeLine{00048\ \ \ \ \ VRB,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob\ }}
 \DoxyCodeLine{00049\ \ \ \ \ VRC,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob}}
 \DoxyCodeLine{00050\ \ \ \ \ VRD\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unassigned\ variable\ knob}}
-\DoxyCodeLine{00051\ \ \ \}\ \doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}};}
+\DoxyCodeLine{00051\ \ \ \}\ \doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{ChannelRC}};}
 \DoxyCodeLine{00052\ }
 \DoxyCodeLine{00053\ }
 \DoxyCodeLine{00057\ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a0674b56a443283e53166df494733b720}{ControlRC}}\ \{}
@@ -76,20 +76,20 @@
 \DoxyCodeLine{00106\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0}{update}}();\ \ }
 \DoxyCodeLine{00107\ }
 \DoxyCodeLine{00108\ }
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474}{printChannel}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ isMapped\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474}{printChannel}}(\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ isMapped\ =\ \textcolor{keyword}{false});}
 \DoxyCodeLine{00115\ }
 \DoxyCodeLine{00116\ }
-\DoxyCodeLine{00124\ \ \ \ \ \ \ uint16\_t\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ mapChannel\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ uint16\_t\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{ChannelRC}}\ channel,\ \textcolor{keywordtype}{bool}\ mapChannel\ =\ \textcolor{keyword}{true});}
 \DoxyCodeLine{00125\ }
 \DoxyCodeLine{00126\ }
 \DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ T\ (*mapFunction)(uint16\_t))\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{ChannelRC}}\ channel,\ T\ (*mapFunction)(uint16\_t))\ \{}
 \DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mapFunction(channelVal[channel]);}
 \DoxyCodeLine{00140\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00141\ }
 \DoxyCodeLine{00142\ }
 \DoxyCodeLine{00154\ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T,\ \textcolor{keyword}{typename}\ F>}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a258f0a4d513f145e30a1ea005a746989}{ChannelRC}}\ channel,\ F\&\&\ mapLambda)\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664}{getChannelValue}}(\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{ChannelRC}}\ channel,\ F\&\&\ mapLambda)\ \{}
 \DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mapLambda(channelVal[channel]);}
 \DoxyCodeLine{00157\ \ \ \ \ \ \ \}\ }
 \DoxyCodeLine{00158\ }

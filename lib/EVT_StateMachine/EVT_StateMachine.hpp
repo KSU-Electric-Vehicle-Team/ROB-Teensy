@@ -108,6 +108,19 @@ namespace Signals {
 
 
       /**
+       * @brief Defines a state behavior given the state and a void function 
+       * 
+       * @note States should be defined in a way where they cannot be a separate task.
+       *       If a state is something that should run continuously, or if it requires 
+       *       a large amount of time, it should be made as a task instead
+       * 
+       * @param state State to set the behavior of 
+       * @param func Function to run for the given state 
+       */
+      void defineState(States state, function<void(void)>);
+
+
+      /**
        * @brief Prints the current state to the Serial monitor
        */
       void printState();

@@ -106,7 +106,7 @@ namespace Signals {
         case (ChannelRC::SWG):
           if (channelVal[channel] == TransmitterConstants::minRC) {
             return triSwitchMap[0];
-          } else if (channelVal[channel] == (TransmitterConstants::midRC)) {
+          } else if (channelVal[channel] == TransmitterConstants::midRC) {
             return triSwitchMap[1];
           } else {
             return triSwitchMap[2];

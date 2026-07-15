@@ -21,6 +21,8 @@ void {\bfseries run\+State} ()
 \begin{DoxyCompactList}\small\item\em Runs the current state. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{define\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} state, const char \texorpdfstring{$\ast$}{*}name, function$<$ void(void)$>$ func)
 \begin{DoxyCompactList}\small\item\em Defines a state behavior given the state and a void function. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2}{define\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} state, function$<$ void(void)$>$)
+\begin{DoxyCompactList}\small\item\em Defines a state behavior given the state and a void function. \end{DoxyCompactList}\item 
 \Hypertarget{class_signals_1_1_state_machine_a42849732a2324dc7bf1d432ef8c88b7c}\label{class_signals_1_1_state_machine_a42849732a2324dc7bf1d432ef8c88b7c} 
 void {\bfseries print\+State} ()
 \begin{DoxyCompactList}\small\item\em Prints the current state to the Serial monitor. \end{DoxyCompactList}\item 
@@ -63,7 +65,7 @@ Defines a new instance of state machine.
 \doxysubsection{Member Function Documentation}
 \Hypertarget{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}\index{Signals::StateMachine@{Signals::StateMachine}!defineState@{defineState}}
 \index{defineState@{defineState}!Signals::StateMachine@{Signals::StateMachine}}
-\doxysubsubsection{\texorpdfstring{defineState()}{defineState()}}
+\doxysubsubsection{\texorpdfstring{defineState()}{defineState()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily \label{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b} 
 void Signals::\+\+State\+Machine::\+define\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{state}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{name}{, }\item[{function$<$ void(void)$>$}]{func}{}\end{DoxyParamCaption})}
 
@@ -79,6 +81,26 @@ Defines a state behavior given the state and a void function.
 {\em state} & State to set the behavior of \\
 \hline
 {\em name} & State name as a string \\
+\hline
+{\em func} & Function to run for the given state \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2}\index{Signals::StateMachine@{Signals::StateMachine}!defineState@{defineState}}
+\index{defineState@{defineState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{defineState()}{defineState()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2} 
+void Signals::\+\+State\+Machine::\+define\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{state}{, }\item[{function$<$ void(void)$>$}]{func}{}\end{DoxyParamCaption})}
+
+
+
+Defines a state behavior given the state and a void function. 
+
+\begin{DoxyNote}{Note}
+\doxylink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States} should be defined in a way where they cannot be a separate task. If a state is something that should run continuously, or if it requires a large amount of time, it should be made as a task instead
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em state} & State to set the behavior of \\
 \hline
 {\em func} & Function to run for the given state \\
 \hline

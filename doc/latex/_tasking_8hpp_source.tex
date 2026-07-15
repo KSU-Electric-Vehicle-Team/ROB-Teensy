@@ -39,78 +39,96 @@
 \DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ Write\ the\ LED\ state\ to\ the\ LED\ pin\ }}
 \DoxyCodeLine{00054\ \ \ \ \ digitalWriteFast(IOConstants::ledBuiltIn,\ ledState\ ?\ arduino::HIGH\ :\ arduino::LOW);}
 \DoxyCodeLine{00055\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(500\ /\ IOConstants::ledBlinkFrequency));}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Take\ the\ telemetry\ mutex\ if\ available\ }}
-\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::telemetryMutex,\ 0)\ ==\ pdTRUE)\ \{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \textcolor{comment}{//\ Copy\ the\ LED\ state\ to\ the\ telemetry\ packet}}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ strcpy(MutexValues::pandaPacket.state,\ ledState\ ?\ \textcolor{stringliteral}{"{}ON"{}}\ :\ \textcolor{stringliteral}{"{}OFF"{}});}
+\DoxyCodeLine{00056\ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \textcolor{comment}{//\ Delete\ the\ task\ if\ the\ while\ loop\ exits}}
+\DoxyCodeLine{00059\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00060\ \}}
 \DoxyCodeLine{00061\ }
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \textcolor{comment}{//\ Return\ the\ telemetry\ mutex}}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ xSemaphoreGive(Mutexes::telemetryMutex);}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ \ \ \}}
-\DoxyCodeLine{00066\ }
-\DoxyCodeLine{00067\ \ \ \textcolor{comment}{//\ Delete\ the\ task\ if\ the\ while\ loop\ exits}}
-\DoxyCodeLine{00068\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00069\ \}}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00075\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ messageTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
-\DoxyCodeLine{00076\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
-\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::telemetryMutex,\ 0)\ ==\ pdTRUE)\ \{}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::rcMutex,\ 0)\ ==\ pdTRUE)\ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ MutexValues::pandaPacket.throttle\ =\ MutexValues::transmitterValues.leftJoystick.y;}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ MutexValues::pandaPacket.steering\ =\ MutexValues::transmitterValues.rightJoystick.x;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ messageTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::telemetryMutex,\ 0)\ ==\ pdTRUE)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::rcMutex,\ 0)\ ==\ pdTRUE)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ MutexValues::pandaPacket.throttle\ =\ MutexValues::transmitterValues.leftJoystick.y;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ MutexValues::pandaPacket.steering\ =\ MutexValues::transmitterValues.rightJoystick.x;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ xSemaphoreGive(Mutexes::rcMutex);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ MutexValues::pandaPacket.format();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Format\ the\ telemetry\ buffer\ with\ the\ given\ data\ in\ the\ pandaPacket}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_queues_ab9e03e1da82fb2a4be1c56085e176300}{Queues::logWrite}}(MutexValues::pandaPacket.buffer);\ \textcolor{comment}{//\ Put\ the\ pandaPacket\ buffer\ in\ the\ log\ queue}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ xSemaphoreGive(Mutexes::telemetryMutex);\ \textcolor{comment}{//\ Give\ the\ telemetry\ mutex\ }}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
 \DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ xSemaphoreGive(Mutexes::rcMutex);}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(50));}
+\DoxyCodeLine{00083\ \ \ \}}
 \DoxyCodeLine{00084\ }
-\DoxyCodeLine{00085\ \ \ \ \ \ \ MutexValues::pandaPacket.format();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Format\ the\ telemetry\ buffer\ with\ the\ given\ data\ in\ the\ pandaPacket}}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_queues_ab9e03e1da82fb2a4be1c56085e176300}{Queues::logWrite}}(MutexValues::pandaPacket.buffer);\ \textcolor{comment}{//\ Put\ the\ pandaPacket\ buffer\ in\ the\ log\ queue}}
-\DoxyCodeLine{00087\ }
-\DoxyCodeLine{00088\ \ \ \ \ \ \ xSemaphoreGive(Mutexes::telemetryMutex);\ \textcolor{comment}{//\ Give\ the\ telemetry\ mutex\ }}
-\DoxyCodeLine{00089\ \ \ \ \ \}}
-\DoxyCodeLine{00090\ }
-\DoxyCodeLine{00091\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(50));}
-\DoxyCodeLine{00092\ \ \ \}}
-\DoxyCodeLine{00093\ }
-\DoxyCodeLine{00094\ \ \ \textcolor{comment}{//\ Delete\ the\ task\ if\ the\ while\ loop\ exits}}
-\DoxyCodeLine{00095\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00096\ \}}
-\DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ }
-\DoxyCodeLine{00102\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ rcTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
-\DoxyCodeLine{00103\ \ \ \doxymbox{\hyperlink{class_signals_1_1_control_r_c}{Signals::ControlRC}}\ transmitter;}
-\DoxyCodeLine{00104\ }
-\DoxyCodeLine{00105\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{\ \ }
-\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordflow}{if}\ (!transmitter.\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0}{update}}())\ \{}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_queues_ab9e03e1da82fb2a4be1c56085e176300}{Queues::logWrite}}(\textcolor{stringliteral}{"{}Awaiting\ valid\ SBUS\ frame..."{}});}
-\DoxyCodeLine{00108\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::rcMutex,\ pdMS\_TO\_TICKS(10))\ ==\ pdTRUE)\ \{}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ MutexValues::transmitterValues.update(\&transmitter);}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ xSemaphoreGive(Mutexes::rcMutex);}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00114\ \ \ \ \ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(1'000\ /\ IOConstants::updateFrequency));}
-\DoxyCodeLine{00117\ \ \ \}}
-\DoxyCodeLine{00118\ }
-\DoxyCodeLine{00119\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00120\ \}}
-\DoxyCodeLine{00121\ }
-\DoxyCodeLine{00122\ }
-\DoxyCodeLine{00126\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ stateMachineTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
-\DoxyCodeLine{00127\ \ \ \doxymbox{\hyperlink{class_signals_1_1_state_machine}{Signals::StateMachine}}\ stateMachine;}
+\DoxyCodeLine{00085\ \ \ \textcolor{comment}{//\ Delete\ the\ task\ if\ the\ while\ loop\ exits}}
+\DoxyCodeLine{00086\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ rcTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
+\DoxyCodeLine{00094\ \ \ \doxymbox{\hyperlink{class_signals_1_1_control_r_c}{Signals::ControlRC}}\ transmitter;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{\ \ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (!transmitter.\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0}{update}}())\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \textcolor{comment}{//\ Queues::logWrite("{}Awaiting\ valid\ SBUS\ frame..."{});}}
+\DoxyCodeLine{00099\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::rcMutex,\ pdMS\_TO\_TICKS(10))\ ==\ pdTRUE)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ MutexValues::transmitterValues.update(\&transmitter);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ xSemaphoreGive(Mutexes::rcMutex);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(1'000\ /\ IOConstants::updateFrequency));}
+\DoxyCodeLine{00108\ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ stateMachineTask(\textcolor{keywordtype}{void}\ *\ pvParameters)\ \{}
+\DoxyCodeLine{00118\ \ \ \doxymbox{\hyperlink{class_signals_1_1_state_machine}{Signals::StateMachine}}\ stateMachine;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{defineState}}(Signals::States::NONE,\ [\&]\ ()\ \{\ \textcolor{comment}{//\ Define\ NONE\ state}}
+\DoxyCodeLine{00121\ \ \ \ \ arduino::digitalWriteFast(40,\ arduino::LOW);}
+\DoxyCodeLine{00122\ \ \ \ \ arduino::digitalWriteFast(41,\ arduino::HIGH);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(3'000));}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375}{setState}}(Signals::States::IDLE);}
+\DoxyCodeLine{00127\ \ \ \});}
 \DoxyCodeLine{00128\ }
-\DoxyCodeLine{00129\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
-\DoxyCodeLine{00130\ \ \ \ \ }
-\DoxyCodeLine{00131\ \ \ \}}
-\DoxyCodeLine{00132\ }
-\DoxyCodeLine{00133\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00134\ \}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{defineState}}(Signals::States::IDLE,\ [\&]\ ()\ \{\ \textcolor{comment}{//\ Define\ IDLE\ state\ }}
+\DoxyCodeLine{00131\ \ \ \ \ arduino::digitalWriteFast(40,\ arduino::HIGH);}
+\DoxyCodeLine{00132\ \ \ \ \ arduino::digitalWriteFast(41,\ arduino::LOW);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(3'000));}
 \DoxyCodeLine{00135\ }
-\DoxyCodeLine{00136\ }
-\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ TASKING}}
+\DoxyCodeLine{00136\ \ \ \ \ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375}{setState}}(Signals::States::NONE);}
+\DoxyCodeLine{00137\ \ \ \});}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordflow}{if}\ (xSemaphoreTake(Mutexes::telemetryMutex,\ 0)\ ==\ pdTRUE)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \textcolor{comment}{//\ Copy\ the\ state\ as\ a\ string\ to\ the\ Panda\ telemetry\ }}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ strcpy(MutexValues::pandaPacket.state,\ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_aa9699549ae35da991405dfed8f215b64}{toString}}(stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_ae632b0e6102de60ca01ebc9565263125}{getState}}()));}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ xSemaphoreGive(Mutexes::telemetryMutex);\ \textcolor{comment}{//\ Give\ the\ telemetry\ mutex\ }}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ stateMachine.\doxymbox{\hyperlink{class_signals_1_1_state_machine_ad37aa8ee2a6f46ae75c5a02f9895671f}{runState}}();}
+\DoxyCodeLine{00149\ \ \ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ vTaskDelete(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00152\ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ TASKING}}
 
 \end{DoxyCode}

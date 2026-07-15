@@ -28,6 +28,11 @@ namespace Signals {
   }
 
 
+  void StateMachine::defineState(States state, function<void(void)> func) {
+    stateMap[state].func = func;
+  }
+
+
   void StateMachine::printState() {
     snprintf(
       statePrint,
