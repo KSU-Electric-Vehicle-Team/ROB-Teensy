@@ -1,0 +1,62 @@
+\doxysection{lib/\+\+EVT\+\_\+\+RC/\+\+EVT\+\_\+\+RC.hpp File Reference}
+\hypertarget{_e_v_t___r_c_8hpp}{}\label{_e_v_t___r_c_8hpp}\index{lib/EVT\_RC/EVT\_RC.hpp@{lib/EVT\_RC/EVT\_RC.hpp}}
+
+
+Header for Control\+RC class.  
+
+
+{\ttfamily \+\#include $<$sbus.\+h$>$}\newline
+{\ttfamily \+\#include $<$Transmitter\+Constants.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$IOConstants.\+hpp$>$}\newline
+{\ttfamily \+\#include "{}Queues.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_signals_1_1_control_r_c}{Signals::\+\+Control\+RC}}
+\begin{DoxyCompactList}\small\item\em Class used to receive and interpret SBUS data. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_queues}{Queues}}
+\begin{DoxyCompactList}\small\item\em Struct used to hold queues used through the codebase. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_signals}{Signals}}
+\begin{DoxyCompactList}\small\item\em Namespace used for commuinications drivers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespace_signals_a147891c611520085f5980b1cbe71dc06}\label{namespace_signals_a147891c611520085f5980b1cbe71dc06} 
+enum \doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Signals::\+\+Channel\+RC}} :\+ uint8\+\_\+t \{ \newline
+{\bfseries RIGHT\+\_\+X} = 0
+, {\bfseries RIGHT\+\_\+Y}
+, {\bfseries LEFT\+\_\+Y}
+, {\bfseries LEFT\+\_\+X}
+, \newline
+{\bfseries SWA}
+, {\bfseries SWB}
+, {\bfseries SWC}
+, {\bfseries SWD}
+, \newline
+{\bfseries SWF}
+, {\bfseries SWE}
+, {\bfseries SWH}
+, {\bfseries SWG}
+, \newline
+{\bfseries VRA}
+, {\bfseries VRB}
+, {\bfseries VRC}
+, {\bfseries VRD}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum used for selection of RC channel values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header for Control\+RC class. 
+
+The Control\+RC class is used to receive data from an RC receiver over SBUS. The UART TX from the RC receiver is connected to the SBUS serial port defined in the \doxylink{struct_i_o_constants}{IOConstants} struct. In addition, this class also allows for the retrevial of specific channels through enums, as well as multiple mapping functions for those received channels.
+
+\begin{DoxyAuthor}{Author}
+Lilia Turbeville 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+June 16, 2026 
+\end{DoxyDate}

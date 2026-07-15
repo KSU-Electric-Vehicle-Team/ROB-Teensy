@@ -31,7 +31,7 @@ namespace Signals {
   /**
    * @brief Enum used for selection of RC channel values 
    */
-  typedef enum : uint16_t {
+  typedef enum : uint8_t {
     RIGHT_X = 0, // Joystick axis for steering
     RIGHT_Y,     // Unassigned joystick axis 
     LEFT_Y,      // Joystick axis for throttle and brake
@@ -162,7 +162,7 @@ namespace Signals {
        * 
        * @return The data from the SBUS UART 
        */
-      SbusData getData();
+      SbusData getData() const;
 
 
       /**

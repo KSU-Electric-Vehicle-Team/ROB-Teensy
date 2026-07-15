@@ -1,0 +1,82 @@
+\doxysection{EVT\+\_\+\+State\+Machine.\+hpp}
+\hypertarget{_e_v_t___state_machine_8hpp_source}{}\label{_e_v_t___state_machine_8hpp_source}\index{lib/EVT\_StateMachine/EVT\_StateMachine.hpp@{lib/EVT\_StateMachine/EVT\_StateMachine.hpp}}
+\doxymbox{\hyperlink{_e_v_t___state_machine_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ STATE\_MACHINE}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ STATE\_MACHINE}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}\textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}arduino\_freertos.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00020\ \textcolor{keyword}{using\ }std::function;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_queues_8hpp}{Queues.hpp}}"{}}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues}{RTOS::Queues}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_signals}{Signals}}\ \{}
+\DoxyCodeLine{00032\ \ \ \textcolor{keyword}{typedef}\ enum\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ NONE\ =\ 0,}
+\DoxyCodeLine{00034\ \ \ \ \ IDLE,}
+\DoxyCodeLine{00035\ \ \ \ \ RC,}
+\DoxyCodeLine{00036\ \ \ \ \ AUTO,}
+\DoxyCodeLine{00037\ \ \ \ \ ERROR,}
+\DoxyCodeLine{00038\ \ \ \ \ STOP,}
+\DoxyCodeLine{00039\ \ \ \ \ RESET}
+\DoxyCodeLine{00040\ \ \ \}\ \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ state;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ State\ enum\ for\ map\ indexing}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Name\ of\ the\ state\ as\ a\ string}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ function<void(\textcolor{keywordtype}{void})>\ func;\ \textcolor{comment}{//\ State\ function\ }}
+\DoxyCodeLine{00051\ \ \ \}\ \doxymbox{\hyperlink{struct_signals_1_1state__t}{state\_t}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00057\ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_signals_1_1_state_machine_a9405f492e068fb72f2ac8b1379b5bcf0}{StateMachine}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ std::map<States,\ state\_t>\ stateMap;\ \textcolor{comment}{//\ State\ map\ to\ store\ and\ index\ states}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ currentState;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ system\ state\ as\ an\ enum}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ statePrint[32];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ State\ print\ serial\ buffer}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setStateDefaults();}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \doxymbox{\hyperlink{class_signals_1_1_state_machine_a9405f492e068fb72f2ac8b1379b5bcf0}{StateMachine}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ initState\ =\ States::NONE);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375}{setState}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ newState);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_ad37aa8ee2a6f46ae75c5a02f9895671f}{runState}}();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{defineState}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ state,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ name,\ function<\textcolor{keywordtype}{void}(\textcolor{keywordtype}{void})>\ func);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{defineState}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ state,\ function<\textcolor{keywordtype}{void}(\textcolor{keywordtype}{void})>);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_a42849732a2324dc7bf1d432ef8c88b7c}{printState}}();}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_ac152973b61d8438d6cf9dbadab56d056}{setErrorState}}();}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_ae632b0e6102de60ca01ebc9565263125}{getState}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_a7462f8b878e57698811deebfa9715f14}{isInState}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ checkState)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \doxymbox{\hyperlink{class_signals_1_1_state_machine_aa9699549ae35da991405dfed8f215b64}{toString}}(\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}\ state);}
+\DoxyCodeLine{00159\ \ \ \};}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ STATE\_MACHINE}}
+
+\end{DoxyCode}

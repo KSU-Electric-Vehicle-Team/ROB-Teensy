@@ -1,0 +1,177 @@
+\doxysection{Signals::\+State\+Machine Class Reference}
+\hypertarget{class_signals_1_1_state_machine}{}\label{class_signals_1_1_state_machine}\index{Signals::StateMachine@{Signals::StateMachine}}
+
+
+Class used for definition and control of a state machine.  
+
+
+
+
+{\ttfamily \+\#include $<$EVT\+\_\+\+State\+Machine.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_signals_1_1_state_machine_a9405f492e068fb72f2ac8b1379b5bcf0}{State\+Machine}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} init\+State=States::\+\+NONE)
+\begin{DoxyCompactList}\small\item\em Defines a new instance of state machine. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375}{set\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} new\+State)
+\begin{DoxyCompactList}\small\item\em Sets the current state. \end{DoxyCompactList}\item 
+\Hypertarget{class_signals_1_1_state_machine_ad37aa8ee2a6f46ae75c5a02f9895671f}\label{class_signals_1_1_state_machine_ad37aa8ee2a6f46ae75c5a02f9895671f} 
+void {\bfseries run\+State} ()
+\begin{DoxyCompactList}\small\item\em Runs the current state. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}{define\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} state, const char \texorpdfstring{$\ast$}{*}name, function$<$ void(void)$>$ func)
+\begin{DoxyCompactList}\small\item\em Defines a state behavior given the state and a void function. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2}{define\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} state, function$<$ void(void)$>$)
+\begin{DoxyCompactList}\small\item\em Defines a state behavior given the state and a void function. \end{DoxyCompactList}\item 
+\Hypertarget{class_signals_1_1_state_machine_a42849732a2324dc7bf1d432ef8c88b7c}\label{class_signals_1_1_state_machine_a42849732a2324dc7bf1d432ef8c88b7c} 
+void {\bfseries print\+State} ()
+\begin{DoxyCompactList}\small\item\em Prints the current state to the Serial monitor. \end{DoxyCompactList}\item 
+\Hypertarget{class_signals_1_1_state_machine_ac152973b61d8438d6cf9dbadab56d056}\label{class_signals_1_1_state_machine_ac152973b61d8438d6cf9dbadab56d056} 
+void {\bfseries set\+Error\+State} ()
+\begin{DoxyCompactList}\small\item\em Set the state machine into ERROR state. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} \doxymbox{\hyperlink{class_signals_1_1_state_machine_ae632b0e6102de60ca01ebc9565263125}{get\+State}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current state as an enum. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_signals_1_1_state_machine_a7462f8b878e57698811deebfa9715f14}{is\+In\+State}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} check\+State) const
+\begin{DoxyCompactList}\small\item\em Checks if the state machine is in a given state. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_signals_1_1_state_machine_aa9699549ae35da991405dfed8f215b64}{to\+String}} (\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} state)
+\begin{DoxyCompactList}\small\item\em Gets the given state as a string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class used for definition and control of a state machine. 
+
+\label{class_signals_1_1_state_machine_doc-constructors}
+\Hypertarget{class_signals_1_1_state_machine_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_signals_1_1_state_machine_a9405f492e068fb72f2ac8b1379b5bcf0}\index{Signals::StateMachine@{Signals::StateMachine}!StateMachine@{StateMachine}}
+\index{StateMachine@{StateMachine}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{StateMachine()}{StateMachine()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_a9405f492e068fb72f2ac8b1379b5bcf0} 
+Signals::\+\+State\+Machine::\+\+State\+Machine (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{init\+State}{ = {\ttfamily States:\+:\+NONE}}\end{DoxyParamCaption})}
+
+
+
+Defines a new instance of state machine. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em init\+State} & Initial state for the system to be defined with (Default NONE) \\
+\hline
+\end{DoxyParams}
+
+
+\label{class_signals_1_1_state_machine_doc-func-members}
+\Hypertarget{class_signals_1_1_state_machine_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b}\index{Signals::StateMachine@{Signals::StateMachine}!defineState@{defineState}}
+\index{defineState@{defineState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{defineState()}{defineState()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_af98acf6ef638e48096ea7874b9c7018b} 
+void Signals::\+\+State\+Machine::\+define\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{state}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{name}{, }\item[{function$<$ void(void)$>$}]{func}{}\end{DoxyParamCaption})}
+
+
+
+Defines a state behavior given the state and a void function. 
+
+\begin{DoxyNote}{Note}
+\doxylink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States} should be defined in a way where they cannot be a separate task. If a state is something that should run continuously, or if it requires a large amount of time, it should be made as a task instead
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em state} & State to set the behavior of \\
+\hline
+{\em name} & State name as a string \\
+\hline
+{\em func} & Function to run for the given state \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2}\index{Signals::StateMachine@{Signals::StateMachine}!defineState@{defineState}}
+\index{defineState@{defineState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{defineState()}{defineState()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_add4ec01b21d2e2de56441576cb0e00d2} 
+void Signals::\+\+State\+Machine::\+define\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{state}{, }\item[{function$<$ void(void)$>$}]{func}{}\end{DoxyParamCaption})}
+
+
+
+Defines a state behavior given the state and a void function. 
+
+\begin{DoxyNote}{Note}
+\doxylink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States} should be defined in a way where they cannot be a separate task. If a state is something that should run continuously, or if it requires a large amount of time, it should be made as a task instead
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em state} & State to set the behavior of \\
+\hline
+{\em func} & Function to run for the given state \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_signals_1_1_state_machine_ae632b0e6102de60ca01ebc9565263125}\index{Signals::StateMachine@{Signals::StateMachine}!getState@{getState}}
+\index{getState@{getState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{getState()}{getState()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_ae632b0e6102de60ca01ebc9565263125} 
+\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}} Signals::\+\+State\+Machine::\+get\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current state as an enum. 
+
+\begin{DoxyReturn}{Returns}
+The current state as a \doxylink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States} enum 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_state_machine_a7462f8b878e57698811deebfa9715f14}\index{Signals::StateMachine@{Signals::StateMachine}!isInState@{isInState}}
+\index{isInState@{isInState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{isInState()}{isInState()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_a7462f8b878e57698811deebfa9715f14} 
+bool Signals::\+\+State\+Machine::\+is\+In\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{check\+State}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if the state machine is in a given state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em check\+State} & State to check for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Whether or not the state machine is currently running the checked state 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375}\index{Signals::StateMachine@{Signals::StateMachine}!setState@{setState}}
+\index{setState@{setState}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{setState()}{setState()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_a430f063dc88e3bc56a7ad4c711ba7375} 
+void Signals::\+\+State\+Machine::\+set\+State (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{new\+State}{}\end{DoxyParamCaption})}
+
+
+
+Sets the current state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+State} & New state to run \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_signals_1_1_state_machine_aa9699549ae35da991405dfed8f215b64}\index{Signals::StateMachine@{Signals::StateMachine}!toString@{toString}}
+\index{toString@{toString}!Signals::StateMachine@{Signals::StateMachine}}
+\doxysubsubsection{\texorpdfstring{toString()}{toString()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_state_machine_aa9699549ae35da991405dfed8f215b64} 
+const char \texorpdfstring{$\ast$}{*} Signals::\+\+State\+Machine::\+to\+String (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a347b0cf8cabed00b1a2932fc3d01fe25}{States}}}]{state}{}\end{DoxyParamCaption})}
+
+
+
+Gets the given state as a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & State to get the value of as a string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The name of the given state as a string 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+\+EVT\+\_\+\+State\+Machine/\+\doxymbox{\hyperlink{_e_v_t___state_machine_8hpp}{EVT\+\_\+\+State\+Machine.\+hpp}}\item 
+lib/\+\+EVT\+\_\+\+State\+Machine/\+EVT\+\_\+\+State\+Machine.\+cpp\end{DoxyCompactItemize}

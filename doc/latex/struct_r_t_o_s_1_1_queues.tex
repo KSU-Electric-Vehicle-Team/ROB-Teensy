@@ -1,0 +1,50 @@
+\doxysection{RTOS::\+Queues Struct Reference}
+\hypertarget{struct_r_t_o_s_1_1_queues}{}\label{struct_r_t_o_s_1_1_queues}\index{RTOS::Queues@{RTOS::Queues}}
+
+
+Struct used to hold queues used through the codebase.  
+
+
+
+
+{\ttfamily \+\#include $<$Queues.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \doxymbox{\hyperlink{struct_r_t_o_s_1_1_queues_ab9e03e1da82fb2a4be1c56085e176300}{log\+Write}} (const char \texorpdfstring{$\ast$}{*}msg)
+\begin{DoxyCompactList}\small\item\em Method used to write messages to the log queue for Serial Monitor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_r_t_o_s_1_1_queues_a09987f40d2551e873a583f267fe0fec5}\label{struct_r_t_o_s_1_1_queues_a09987f40d2551e873a583f267fe0fec5} 
+static Queue\+Handle\+\_\+t {\bfseries log\+Queue} = x\+Queue\+Create(16, sizeof(const char\texorpdfstring{$\ast$}{*}))
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Struct used to hold queues used through the codebase. 
+
+\label{struct_r_t_o_s_1_1_queues_doc-func-members}
+\Hypertarget{struct_r_t_o_s_1_1_queues_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_r_t_o_s_1_1_queues_ab9e03e1da82fb2a4be1c56085e176300}\index{RTOS::Queues@{RTOS::Queues}!logWrite@{logWrite}}
+\index{logWrite@{logWrite}!RTOS::Queues@{RTOS::Queues}}
+\doxysubsubsection{\texorpdfstring{logWrite()}{logWrite()}}
+{\footnotesize\ttfamily \label{struct_r_t_o_s_1_1_queues_ab9e03e1da82fb2a4be1c56085e176300} 
+void RTOS::\+\+Queues::\+log\+Write (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{msg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Method used to write messages to the log queue for Serial Monitor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message to write as a char pointer \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+include/\+\doxymbox{\hyperlink{_queues_8hpp}{Queues.\+hpp}}\end{DoxyCompactItemize}

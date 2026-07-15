@@ -1,0 +1,29 @@
+\doxysection{include/\+\+Tasking.hpp File Reference}
+\hypertarget{_tasking_8hpp}{}\label{_tasking_8hpp}\index{include/Tasking.hpp@{include/Tasking.hpp}}
+
+
+Methods used for \doxylink{namespace_r_t_o_s}{RTOS} tasks.  
+
+
+{\ttfamily \+\#include $<$EVT\+\_\+\+RC.\+hpp$>$}\newline
+{\ttfamily \+\#include "{}Mutexes.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_mutexes}{Mutexes}}
+\begin{DoxyCompactList}\small\item\em A collection of mutexes used through the various tasks. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_mutex_values}{Mutex\+Values}}
+\begin{DoxyCompactList}\small\item\em Values used through various tasks to be protected by mutex. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Methods used for \doxylink{namespace_r_t_o_s}{RTOS} tasks. 
+
+The metohods and structs found in tasking are used to make the main loop a bit more streamlined. Essentially, every task method for the system is defined here and later used in the setup function in main to actually create and run the tasks with Free\+RTOS
+
+\begin{DoxyAuthor}{Author}
+Lilia Turbeville 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+June 16, 2026 
+\end{DoxyDate}

@@ -10,6 +10,9 @@ void setup() {
   // Set the on board LED pin to output
   arduino::pinMode(IOConstants::ledBuiltIn, arduino::OUTPUT);
 
+  arduino::pinMode(40, arduino::OUTPUT);
+  arduino::pinMode(41, arduino::OUTPUT);
+
   xTaskCreate(        // Create a task to log messages to the Serial monitor 
     printTask,        // Task function to be called
     "Serial Monitor", // Task name as a string
@@ -45,6 +48,15 @@ void setup() {
     3,
     NULL
   );
+
+  xTaskCreate( // Create a task to handle the state machine
+    stateMachineTask,
+    "State Machine Task",
+    256,
+    NULL,
+    4,
+    NULL
+  ); 
 
   // Start the RTOS scheduler
   vTaskStartScheduler();  

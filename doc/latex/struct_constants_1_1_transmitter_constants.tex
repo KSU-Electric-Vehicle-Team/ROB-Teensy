@@ -1,0 +1,73 @@
+\doxysection{Constants::\+Transmitter\+Constants Struct Reference}
+\hypertarget{struct_constants_1_1_transmitter_constants}{}\label{struct_constants_1_1_transmitter_constants}\index{Constants::TransmitterConstants@{Constants::TransmitterConstants}}
+
+
+\doxylink{namespace_constants}{Constants} used for recieving and converting data from s\+Bus.  
+
+
+
+
+{\ttfamily \+\#include $<$Transmitter\+Constants.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_ac2e43d8668045fc522a2d27008be7788}\label{struct_constants_1_1_transmitter_constants_ac2e43d8668045fc522a2d27008be7788} 
+static constexpr double {\bfseries deadband\+Percent} = 0.\+05
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a3a8feaa22f0a1099c26319c895d117a9}\label{struct_constants_1_1_transmitter_constants_a3a8feaa22f0a1099c26319c895d117a9} 
+static const int {\bfseries num\+Channels} = 16
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a99b47e91bbf59c645d1a395d4bc5ecaf}\label{struct_constants_1_1_transmitter_constants_a99b47e91bbf59c645d1a395d4bc5ecaf} 
+static constexpr uint16\+\_\+t {\bfseries default\+Joystick} \+[2]\+ = \{0, 100\}
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a2df81bc390f688d7ba2708e7e0f4bfb5}\label{struct_constants_1_1_transmitter_constants_a2df81bc390f688d7ba2708e7e0f4bfb5} 
+static constexpr uint16\+\_\+t {\bfseries default\+Switch} \+[2]\+ = \{0, 100\}
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_ad0c0981932189f0b37878dabdd78b486}\label{struct_constants_1_1_transmitter_constants_ad0c0981932189f0b37878dabdd78b486} 
+static constexpr uint16\+\_\+t {\bfseries default\+Tri\+Switch} \+[3]\+ = \{0, 50, 100\}
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a9a7a3f2eecfcc5bd75441fe0005d9587}\label{struct_constants_1_1_transmitter_constants_a9a7a3f2eecfcc5bd75441fe0005d9587} 
+static constexpr uint16\+\_\+t {\bfseries default\+Knob} \+[2]\+ = \{0, 100\}
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a7bd5d1582e1a5c73d7a1d95fb6868a17}\label{struct_constants_1_1_transmitter_constants_a7bd5d1582e1a5c73d7a1d95fb6868a17} 
+static const uint16\+\_\+t {\bfseries min\+RC} = 307
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a0add465f71848d6ba88eaf78122fe021}\label{struct_constants_1_1_transmitter_constants_a0add465f71848d6ba88eaf78122fe021} 
+static const uint16\+\_\+t {\bfseries mid\+RC} = 974
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_aca00a53117d6d2bbbce04408ca57f999}\label{struct_constants_1_1_transmitter_constants_aca00a53117d6d2bbbce04408ca57f999} 
+static const uint16\+\_\+t {\bfseries max\+RC} = 1\textquotesingle{}640
+\item 
+\Hypertarget{struct_constants_1_1_transmitter_constants_a0cbec61ba506e9878012b9f6cb329668}\label{struct_constants_1_1_transmitter_constants_a0cbec61ba506e9878012b9f6cb329668} 
+static const uint16\+\_\+t {\bfseries deadband\+Variance} = max\+RC \texorpdfstring{$\ast$}{*} (deadband\+Percent /\+ 2)
+\item 
+static constexpr uint16\+\_\+t \doxymbox{\hyperlink{struct_constants_1_1_transmitter_constants_ae851db4bf9b81d4862b554b62511ceab}{deadband\+Bounds}} \+[2]\+
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{namespace_constants}{Constants} used for recieving and converting data from s\+Bus. 
+
+\label{struct_constants_1_1_transmitter_constants_doc-variable-members}
+\Hypertarget{struct_constants_1_1_transmitter_constants_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_constants_1_1_transmitter_constants_ae851db4bf9b81d4862b554b62511ceab}\index{Constants::TransmitterConstants@{Constants::TransmitterConstants}!deadbandBounds@{deadbandBounds}}
+\index{deadbandBounds@{deadbandBounds}!Constants::TransmitterConstants@{Constants::TransmitterConstants}}
+\doxysubsubsection{\texorpdfstring{deadbandBounds}{deadbandBounds}}
+{\footnotesize\ttfamily \label{struct_constants_1_1_transmitter_constants_ae851db4bf9b81d4862b554b62511ceab} 
+uint16\+\_\+t Constants::\+\+Transmitter\+Constants::\+deadband\+Bounds\+[2]\+\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \{\ }
+\DoxyCodeLine{\ \ midRC\ -\/\ deadbandVariance,\ }
+\DoxyCodeLine{\ \ midRC\ +\ deadbandVariance\ \ }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+\+Constants/\+\doxymbox{\hyperlink{_transmitter_constants_8hpp}{Transmitter\+Constants.\+hpp}}\end{DoxyCompactItemize}

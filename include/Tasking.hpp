@@ -53,15 +53,6 @@ static void blinkTask(void * pvParameters) {
     // Write the LED state to the LED pin 
     digitalWriteFast(IOConstants::ledBuiltIn, ledState ? arduino::HIGH : arduino::LOW);
     vTaskDelay(pdMS_TO_TICKS(500 / IOConstants::ledBlinkFrequency));
-
-    // Take the telemetry mutex if available 
-    if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
-      // Copy the LED state to the telemetry packet
-      strcpy(MutexValues::pandaPacket.state, ledState ? "ON" : "OFF");
-
-      // Return the telemetry mutex
-      xSemaphoreGive(Mutexes::telemetryMutex);
-    }
   }
 
   // Delete the task if the while loop exits
@@ -104,7 +95,7 @@ static void rcTask(void * pvParameters) {
 
   while (true) {  
     if (!transmitter.update()) {
-      Queues::logWrite("Awaiting valid SBUS frame...");
+      // Queues::logWrite("Awaiting valid SBUS frame...");
     } else {
       if (xSemaphoreTake(Mutexes::rcMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
         MutexValues::transmitterValues.update(&transmitter);
@@ -114,6 +105,47 @@ static void rcTask(void * pvParameters) {
     }
 
     vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
+  }
+
+  vTaskDelete(nullptr);
+}
+
+
+/**
+ * @brief Task used to update and run the state machine
+ */
+static void stateMachineTask(void * pvParameters) {
+  Signals::StateMachine stateMachine;
+
+  stateMachine.defineState(Signals::States::NONE, [&] () { // Define NONE state
+    arduino::digitalWriteFast(40, arduino::LOW);
+    arduino::digitalWriteFast(41, arduino::HIGH);
+
+    vTaskDelay(pdMS_TO_TICKS(3'000));
+
+    stateMachine.setState(Signals::States::IDLE);
+  });
+
+
+  stateMachine.defineState(Signals::States::IDLE, [&] () { // Define IDLE state 
+    arduino::digitalWriteFast(40, arduino::HIGH);
+    arduino::digitalWriteFast(41, arduino::LOW);
+
+    vTaskDelay(pdMS_TO_TICKS(3'000));
+
+    stateMachine.setState(Signals::States::NONE);
+  });
+
+
+  while (true) {
+    if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
+      // Copy the state as a string to the Panda telemetry 
+      strcpy(MutexValues::pandaPacket.state, stateMachine.toString(stateMachine.getState()));
+
+      xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
+    }
+
+    stateMachine.runState();
   }
 
   vTaskDelete(nullptr);

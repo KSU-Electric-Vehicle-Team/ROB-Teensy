@@ -1,0 +1,119 @@
+\doxysection{Mutexes.\+hpp}
+\hypertarget{_mutexes_8hpp_source}{}\label{_mutexes_8hpp_source}\index{include/Mutexes.hpp@{include/Mutexes.hpp}}
+\doxymbox{\hyperlink{_mutexes_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MUTEXES}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MUTEXES}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}\textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_e_v_t___state_machine_8hpp}{EVT\_StateMachine.hpp}}>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_e_v_t___r_c_8hpp}{EVT\_RC.hpp}}>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_r_t_o_s}{RTOS}}\ \{}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_mutexes}{Mutexes}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{static}\ SemaphoreHandle\_t\ telemetryMutex;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{static}\ SemaphoreHandle\_t\ commandMutex;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{static}\ SemaphoreHandle\_t\ rcMutex;}
+\DoxyCodeLine{00027\ \ \ \};\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{char}\ buffer[128];\ \ \ \ \ \ \ \textcolor{comment}{//\ Message\ buffer\ for\ the\ Ethernet\ connection}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{char}\ state[8];\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ state\ as\ a\ string}}
+\DoxyCodeLine{00036\ \ \ \ \ }
+\DoxyCodeLine{00037\ \ \ \ \ int32\_t\ encoderCount;\ \ \ \textcolor{comment}{//\ Encoder\ tick\ count\ since\ boot}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{float}\ driveRevolutions;\ \textcolor{comment}{//\ Number\ of\ turns\ of\ the\ drive\ motor\ }}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{float}\ steeringAngle;\ \ \ \ \textcolor{comment}{//\ Current\ steering\ angle}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{float}\ oDriveTarget;\ \ \ \ \ \textcolor{comment}{//\ ODrive\ target\ angle\ }}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{float}\ rpm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Drive\ motor\ RPM\ target}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ uint16\_t\ throttle;\ \ \ \ \ \ \textcolor{comment}{//\ RC\ throttle\ input}}
+\DoxyCodeLine{00045\ \ \ \ \ uint16\_t\ steering;\ \ \ \ \ \ \textcolor{comment}{//\ RC\ steering\ input}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_r_t_o_s_1_1telemetry__t_ab2d65566fd82d15e06ecc83078ffe8fd}{format}}()\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ snprintf(}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ this-\/>buffer,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{sizeof}(this-\/>buffer),}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s,\%0.2f,\%0.2f,\%0.2f,\%u,\%u,\%0.6f,\%ld"{}},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ this-\/>state,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ this-\/>rpm,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ this-\/>steeringAngle,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ this-\/>oDriveTarget,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ this-\/>throttle,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ this-\/>steering,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ this-\/>driveRevolutions,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ this-\/>encoderCount}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \}\ telemetry\_t;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00071\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{char}\ stateString[8];}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{float}\ steering;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{float}\ brake;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{float}\ erpm;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ emergency;}
+\DoxyCodeLine{00079\ \ \ \}\ \doxymbox{\hyperlink{struct_r_t_o_s_1_1command__t}{command\_t}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ uint16\_t\ x;\ \textcolor{comment}{//\ X\ axis\ value}}
+\DoxyCodeLine{00087\ \ \ \ \ uint16\_t\ y;\ \textcolor{comment}{//\ Y\ axis\ value}}
+\DoxyCodeLine{00088\ \ \ \}\ \doxymbox{\hyperlink{struct_r_t_o_s_1_1joystick__t}{joystick\_t}};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00094\ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00095\ \ \ \ \ \doxymbox{\hyperlink{struct_r_t_o_s_1_1joystick__t}{joystick\_t}}\ leftJoystick;}
+\DoxyCodeLine{00096\ \ \ \ \ \doxymbox{\hyperlink{struct_r_t_o_s_1_1joystick__t}{joystick\_t}}\ rightJoystick;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ uint16\_t\ swa,\ swb,\ swc,\ swd,\ swe,\ swf,\ swg,\ swh;}
+\DoxyCodeLine{00099\ \ \ \ \ uint16\_t\ vra,\ vrb,\ vrc,\ vrd;\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{struct_r_t_o_s_1_1transmitter__t_ac59bf7c907e744ffa49392799550aa62}{update}}(\doxymbox{\hyperlink{class_signals_1_1_control_r_c}{Signals::ControlRC}}\ *\ transmitter)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ leftJoystick.x\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::LEFT\_X,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ leftJoystick.y\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::LEFT\_Y,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ rightJoystick.x\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::RIGHT\_X,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ rightJoystick.y\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::RIGHT\_Y,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ swa\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWA,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ swb\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWB,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ swc\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWC,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ swd\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWD,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ swe\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWE,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ swf\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWF,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ swg\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWG,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ swh\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::SWH,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ vra\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::VRA,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ vra\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::VRB,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ vra\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::VRC,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ vra\ =\ transmitter-\/>\doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{getChannelValue}}(Signals::ChannelRC::VRD,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00126\ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \ \ \}\ transmitter\_t;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00133\ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_r_t_o_s_1_1_mutex_values}{MutexValues}}\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{static}\ transmitter\_t\ transmitterValues;\ \textcolor{comment}{//\ Values\ from\ the\ RC\ transmitter}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{static}\ telemetry\_t\ pandaPacket;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Values\ to\ send\ to\ the\ Panda\ packet\ }}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{static}\ command\_t\ commands;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Values\ for\ the\ autonomous\ commands}}
+\DoxyCodeLine{00137\ \ \ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ SemaphoreHandle\_t\ Mutexes::telemetryMutex\ =\ xSemaphoreCreateMutex();}
+\DoxyCodeLine{00141\ \ \ SemaphoreHandle\_t\ Mutexes::commandMutex\ =\ xSemaphoreCreateMutex();}
+\DoxyCodeLine{00142\ \ \ SemaphoreHandle\_t\ Mutexes::rcMutex\ =\ xSemaphoreCreateMutex();}
+\DoxyCodeLine{00143\ \ \ }
+\DoxyCodeLine{00144\ \ \ transmitter\_t\ MutexValues::transmitterValues;}
+\DoxyCodeLine{00145\ \ \ telemetry\_t\ MutexValues::pandaPacket;}
+\DoxyCodeLine{00146\ \ \ command\_t\ MutexValues::commands;}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MUTEXES}}
+
+\end{DoxyCode}

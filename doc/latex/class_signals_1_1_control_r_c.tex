@@ -1,0 +1,232 @@
+\doxysection{Signals::\+Control\+RC Class Reference}
+\hypertarget{class_signals_1_1_control_r_c}{}\label{class_signals_1_1_control_r_c}\index{Signals::ControlRC@{Signals::ControlRC}}
+
+
+Class used to receive and interpret SBUS data.  
+
+
+
+
+{\ttfamily \+\#include $<$EVT\+\_\+\+RC.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}\label{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41} 
+enum \doxymbox{\hyperlink{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}{map\+Type}} :\+ uint8\+\_\+t \{ {\bfseries JOYSTICK} = 0
+, {\bfseries SWITCH}
+, {\bfseries TRI\+\_\+\+SWITCH}
+, {\bfseries KNOB}
+ \}
+\begin{DoxyCompactList}\small\item\em Enum used for selection of mapping values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_signals_1_1_control_r_c_a0674b56a443283e53166df494733b720}\label{class_signals_1_1_control_r_c_a0674b56a443283e53166df494733b720} 
+{\bfseries Control\+RC} ()
+\begin{DoxyCompactList}\small\item\em Define a new \doxylink{class_signals_1_1_control_r_c}{Control\+RC} instance. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_control_r_c_ae3dfd6f05360c6ddb5411d4036e7e26a}{set\+Mapping}} (const uint16\+\_\+t map\+Array\+[2]\+, \doxymbox{\hyperlink{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}{map\+Type}} mapping\+Type)
+\begin{DoxyCompactList}\small\item\em Sets the mapping array given the type of mapping to set. \end{DoxyCompactList}\item 
+\Hypertarget{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0}\label{class_signals_1_1_control_r_c_a03c9dbfc3e1cbbd8f4e9e335de01e1f0} 
+bool {\bfseries update} ()
+\begin{DoxyCompactList}\small\item\em Update the data received from the SBUS. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474}{print\+Channel}} (\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}} channel, bool is\+Mapped=false)
+\begin{DoxyCompactList}\small\item\em Prints the value of a given channel. \end{DoxyCompactList}\item 
+uint16\+\_\+t \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}{get\+Channel\+Value}} (\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}} channel, bool map\+Channel=true)
+\begin{DoxyCompactList}\small\item\em Get the value of a given channel. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T$>$ }\\T \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9}{get\+Channel\+Value}} (\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}} channel, T(\texorpdfstring{$\ast$}{*}map\+Function)(uint16\+\_\+t))
+\begin{DoxyCompactList}\small\item\em Gets the value of a channel given a method to map to non-\/integer types. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T, typename F$>$ }\\T \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664}{get\+Channel\+Value}} (\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}} channel, F \&\&map\+Lambda)
+\begin{DoxyCompactList}\small\item\em Gets the value of a chanel given a lambda expression to map to non-\/integer types. \end{DoxyCompactList}\item 
+Sbus\+Data \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a5e138ad7a3ee320f24518dcb6bca3887}{get\+Data}} () const
+\begin{DoxyCompactList}\small\item\em Gets the data from the SBUS. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a73d55d51da2458d08b4e02128982274a}{map\+Switches}} (uint16\+\_\+t val)
+\begin{DoxyCompactList}\small\item\em Maps the value of switches to booleans. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T$>$ }\\static T \doxymbox{\hyperlink{class_signals_1_1_control_r_c_a023c949cdbd73fc2bc483b68811c08b9}{map\+To\+Percent}} (T value, const T(\&map\+Array)\+[2]\+)
+\begin{DoxyCompactList}\small\item\em Maps a value within a range to a percentage value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class used to receive and interpret SBUS data. 
+
+\label{class_signals_1_1_control_r_c_doc-func-members}
+\Hypertarget{class_signals_1_1_control_r_c_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36}\index{Signals::ControlRC@{Signals::ControlRC}!getChannelValue@{getChannelValue}}
+\index{getChannelValue@{getChannelValue}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{getChannelValue()}{getChannelValue()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a938399b0c40e71dd73f8a2482ff89c36} 
+uint16\+\_\+t Signals::\+\+Control\+RC::\+get\+Channel\+Value (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}}}]{channel}{, }\item[{bool}]{map\+Channel}{ = {\ttfamily true}}\end{DoxyParamCaption})}
+
+
+
+Get the value of a given channel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel to get the value of \\
+\hline
+{\em map\+Channel} & Condition for mapping the value from the channel \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value received, and possibly mapped, from the channel 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664}\index{Signals::ControlRC@{Signals::ControlRC}!getChannelValue@{getChannelValue}}
+\index{getChannelValue@{getChannelValue}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{getChannelValue()}{getChannelValue()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a04d149f6e571e988b2186f72b67dc664} 
+template$<$class T, typename F$>$ \\
+T Signals::\+\+Control\+RC::\+get\+Channel\+Value (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}}}]{channel}{, }\item[{F \&\&}]{map\+Lambda}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the value of a chanel given a lambda expression to map to non-\/integer types. 
+
+\begin{DoxyNote}{Note}
+When using this method, you have to specify the expected return type when calling
+\end{DoxyNote}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type to map to \\
+\hline
+{\em F} & Lambda template type \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel to get the value from \\
+\hline
+{\em map\+Lambda} & Lambda expression to use to map the value (Must only take in a single uint16\+\_\+t) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+T Mapped value from the channel 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9}\index{Signals::ControlRC@{Signals::ControlRC}!getChannelValue@{getChannelValue}}
+\index{getChannelValue@{getChannelValue}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{getChannelValue()}{getChannelValue()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a3cacb20c2847de4695de1b69f2ac19c9} 
+template$<$class T$>$ \\
+T Signals::\+\+Control\+RC::\+get\+Channel\+Value (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}}}]{channel}{, }\item[{T(\texorpdfstring{$\ast$}{*}}]{map\+Function~}{)(uint16\+\_\+t)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the value of a channel given a method to map to non-\/integer types. 
+
+\begin{DoxyNote}{Note}
+This method can also be used to apply mapping curves
+\end{DoxyNote}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type to map to \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel to get the value from \\
+\hline
+{\em map\+Function} & Method to use to map the value (Must only take in a single uint16\+\_\+t) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Mapped value from the channel 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a5e138ad7a3ee320f24518dcb6bca3887}\index{Signals::ControlRC@{Signals::ControlRC}!getData@{getData}}
+\index{getData@{getData}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{getData()}{getData()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a5e138ad7a3ee320f24518dcb6bca3887} 
+Sbus\+Data Signals::\+\+Control\+RC::\+get\+Data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the data from the SBUS. 
+
+\begin{DoxyReturn}{Returns}
+The data from the SBUS UART 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a73d55d51da2458d08b4e02128982274a}\index{Signals::ControlRC@{Signals::ControlRC}!mapSwitches@{mapSwitches}}
+\index{mapSwitches@{mapSwitches}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{mapSwitches()}{mapSwitches()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a73d55d51da2458d08b4e02128982274a} 
+bool Signals::\+\+Control\+RC::\+map\+Switches (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{val}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Maps the value of switches to booleans. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & The value of the switch as an uint16\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the switch as a boolean 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a023c949cdbd73fc2bc483b68811c08b9}\index{Signals::ControlRC@{Signals::ControlRC}!mapToPercent@{mapToPercent}}
+\index{mapToPercent@{mapToPercent}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{mapToPercent()}{mapToPercent()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a023c949cdbd73fc2bc483b68811c08b9} 
+template$<$class T$>$ \\
+T Signals::\+\+Control\+RC::\+map\+To\+Percent (\begin{DoxyParamCaption}\item[{T}]{value}{, }\item[{const T(\&)}]{map\+Array}{\+[2]\+}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Maps a value within a range to a percentage value. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Data type of the value to be mapped (double, int, etc.) \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value to be mapped to a percent \\
+\hline
+{\em map\+Array} & Array to use to map the value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Mapped percentage value 
+\end{DoxyReturn}
+\Hypertarget{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474}\index{Signals::ControlRC@{Signals::ControlRC}!printChannel@{printChannel}}
+\index{printChannel@{printChannel}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{printChannel()}{printChannel()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_a67797a775428e5a327c9b7f7c280e474} 
+void Signals::\+\+Control\+RC::\+print\+Channel (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_signals_a147891c611520085f5980b1cbe71dc06}{Channel\+RC}}}]{channel}{, }\item[{bool}]{is\+Mapped}{ = {\ttfamily false}}\end{DoxyParamCaption})}
+
+
+
+Prints the value of a given channel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em is\+Mapped} & Condition to map the values when printing (Default false) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_signals_1_1_control_r_c_ae3dfd6f05360c6ddb5411d4036e7e26a}\index{Signals::ControlRC@{Signals::ControlRC}!setMapping@{setMapping}}
+\index{setMapping@{setMapping}!Signals::ControlRC@{Signals::ControlRC}}
+\doxysubsubsection{\texorpdfstring{setMapping()}{setMapping()}}
+{\footnotesize\ttfamily \label{class_signals_1_1_control_r_c_ae3dfd6f05360c6ddb5411d4036e7e26a} 
+void Signals::\+\+Control\+RC::\+set\+Mapping (\begin{DoxyParamCaption}\item[{const uint16\+\_\+t}]{map\+Array}{\+[2]\+, }\item[{\doxymbox{\hyperlink{class_signals_1_1_control_r_c_abb85caa3724b278cfb44bba831258a41}{map\+Type}}}]{mapping\+Type}{}\end{DoxyParamCaption})}
+
+
+
+Sets the mapping array given the type of mapping to set. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map\+Array} & Array to use to set the mapping values \\
+\hline
+{\em mapping\+Type} & Type of mapping to set \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+lib/\+\+EVT\+\_\+\+RC/\+\doxymbox{\hyperlink{_e_v_t___r_c_8hpp}{EVT\+\_\+\+RC.\+hpp}}\item 
+lib/\+\+EVT\+\_\+\+RC/\+EVT\+\_\+\+RC.\+cpp\end{DoxyCompactItemize}

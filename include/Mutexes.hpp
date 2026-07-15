@@ -13,6 +13,7 @@
  * @date   June 16, 2026
 *//*---------------------------------------------------------------------------*/
 
+#include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
 
 namespace RTOS {
@@ -21,6 +22,7 @@ namespace RTOS {
    */
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
+    static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t rcMutex;
   }; 
 
@@ -67,12 +69,12 @@ namespace RTOS {
    * @brief Struct used to format UDP autonomous commands
    */
   typedef struct {
-    char state[8];
+    char stateString[8];
 
     float steering;
     float brake;
     float erpm;
-    
+
     bool emergency;
   } command_t;
 
@@ -131,16 +133,17 @@ namespace RTOS {
   struct MutexValues {
     static transmitter_t transmitterValues; // Values from the RC transmitter
     static telemetry_t pandaPacket;         // Values to send to the Panda packet 
-    static command_t autoCommands;          // Values for the autonomous commands
+    static command_t commands;               // Values for the autonomous commands
   };
 
 
   SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();
+  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();
   
   transmitter_t MutexValues::transmitterValues;
   telemetry_t MutexValues::pandaPacket;
-  command_t MutexValues::autoCommands;
+  command_t MutexValues::commands;
 }
 
 #endif // MUTEXES
