@@ -27,9 +27,10 @@ namespace Constants {
     static const size_t oDriveBaudrate = 115'200;
     static const size_t vescBaudrate = 115'200;
 
-    static constexpr double updateFrequency = 80.0;
-    static constexpr double ledBlinkFrequency = 1.0;
+    static constexpr double serialPrintFrequency = 5.0;
     static constexpr double telemetryFrequency = 8.0;
+    static constexpr double ledBlinkFrequency = 1.0;
+    static constexpr double updateFrequency = 80.0;
 
     static constexpr uint16_t driveEncoderPulsesPerRev = 600;
     
@@ -51,9 +52,6 @@ namespace Constants {
 
     static constexpr uint8_t driveEncoderPinA = 1; // E38S6G5 channel A
     static constexpr uint8_t driveEncoderPinB = 0; // E38S6G5 channel B
-    
-    static const bool telemetryToSerial = false;
-    static const bool motorDataToSerial = false;
   };
 }
 

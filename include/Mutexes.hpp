@@ -22,8 +22,10 @@ namespace RTOS {
    */
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
-    static SemaphoreHandle_t commandMutex;
-    static SemaphoreHandle_t rcMutex;
+    static SemaphoreHandle_t commandMutex;  
+    static SemaphoreHandle_t rcMutex;       
+
+    static SemaphoreHandle_t errorSemaphore;
   }; 
 
 
@@ -102,27 +104,28 @@ namespace RTOS {
      * @brief Updates the values of the struct
      * 
      * @param transmitter ControlRC instance to use to update the values
+     * @param isMapped Condition to determine whether to map the channels or not (Default false)
      */
-    void update(Signals::ControlRC * transmitter) {
-      leftJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::LEFT_X, false);
-      leftJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::LEFT_Y, false);
+    void update(Signals::ControlRC * transmitter, bool isMapped = false) {
+      leftJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::LEFT_X, isMapped);
+      leftJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::LEFT_Y, isMapped);
 
-      rightJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_X, false);
-      rightJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_Y, false);
+      rightJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_X, isMapped);
+      rightJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_Y, isMapped);
 
-      swa = transmitter->getChannelValue(Signals::ChannelRC::SWA, false);
-      swb = transmitter->getChannelValue(Signals::ChannelRC::SWB, false);
-      swc = transmitter->getChannelValue(Signals::ChannelRC::SWC, false);
-      swd = transmitter->getChannelValue(Signals::ChannelRC::SWD, false);
-      swe = transmitter->getChannelValue(Signals::ChannelRC::SWE, false);
-      swf = transmitter->getChannelValue(Signals::ChannelRC::SWF, false);
-      swg = transmitter->getChannelValue(Signals::ChannelRC::SWG, false);
-      swh = transmitter->getChannelValue(Signals::ChannelRC::SWH, false);
+      swa = transmitter->getChannelValue(Signals::ChannelRC::SWA, isMapped);
+      swb = transmitter->getChannelValue(Signals::ChannelRC::SWB, isMapped);
+      swc = transmitter->getChannelValue(Signals::ChannelRC::SWC, isMapped);
+      swd = transmitter->getChannelValue(Signals::ChannelRC::SWD, isMapped);
+      swe = transmitter->getChannelValue(Signals::ChannelRC::SWE, isMapped);
+      swf = transmitter->getChannelValue(Signals::ChannelRC::SWF, isMapped);
+      swg = transmitter->getChannelValue(Signals::ChannelRC::SWG, isMapped);
+      swh = transmitter->getChannelValue(Signals::ChannelRC::SWH, isMapped);
 
-      vra = transmitter->getChannelValue(Signals::ChannelRC::VRA, false);
-      vra = transmitter->getChannelValue(Signals::ChannelRC::VRB, false);
-      vra = transmitter->getChannelValue(Signals::ChannelRC::VRC, false);
-      vra = transmitter->getChannelValue(Signals::ChannelRC::VRD, false);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRA, isMapped);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRB, isMapped);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRC, isMapped);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRD, isMapped);
     }
   } transmitter_t;
 
@@ -131,19 +134,27 @@ namespace RTOS {
    * @brief Values used through various tasks to be protected by mutex 
    */
   struct MutexValues {
-    static transmitter_t transmitterValues; // Values from the RC transmitter
-    static telemetry_t pandaPacket;         // Values to send to the Panda packet 
-    static command_t commands;               // Values for the autonomous commands
+    static transmitter_t transmitterValues; 
+    static telemetry_t pandaPacket;         
+    static command_t commands;              
+
+    static bool isCalibrated; // Condition to denote whether or not the car is calibrated 
   };
 
 
-  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();
-  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();
-  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();
+  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();  // Mutex for Ethernet telemetry values 
+  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();    // Mutex for motor commnds 
+  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         // Mutex for RC values 
+
+  SemaphoreHandle_t Mutexes::errorSemaphore = xSemaphoreCreateBinary(); // Binary semaphore for error handling
   
-  transmitter_t MutexValues::transmitterValues;
-  telemetry_t MutexValues::pandaPacket;
-  command_t MutexValues::commands;
+  // Structs for value packets 
+  transmitter_t MutexValues::transmitterValues; // Vlaues from the RC transmitter
+  telemetry_t MutexValues::pandaPacket;         // Values to send to the Panda packet 
+  command_t MutexValues::commands;              // Values for the autonomous commands 
+
+  // Other mutex values
+  bool MutexValues::isCalibrated;               // Value to denote whether or not the car has been calibrated 
 }
 
 #endif // MUTEXES

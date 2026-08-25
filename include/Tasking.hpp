@@ -61,7 +61,7 @@ static void blinkTask(void * pvParameters) {
 
 
 /**
- * @brief Task used to write the elapsed time in seconds since boot to Serial
+ * @brief Task used to print the formatted Ethernet buffer to Serial
  */
 static void messageTask(void * pvParameters) {
   while (true) {
@@ -79,7 +79,7 @@ static void messageTask(void * pvParameters) {
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
     }
 
-    vTaskDelay(pdMS_TO_TICKS(50));
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::serialPrintFrequency));
   }
 
   // Delete the task if the while loop exits
@@ -94,16 +94,13 @@ static void rcTask(void * pvParameters) {
   Signals::ControlRC transmitter;
 
   while (true) {  
-    if (!transmitter.update()) {
-      // Queues::logWrite("Awaiting valid SBUS frame...");
-    } else {
+    if (transmitter.update()) {
       if (xSemaphoreTake(Mutexes::rcMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
         MutexValues::transmitterValues.update(&transmitter);
-
         xSemaphoreGive(Mutexes::rcMutex);
       }
     }
-
+    
     vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
   }
 
@@ -118,22 +115,43 @@ static void stateMachineTask(void * pvParameters) {
   Signals::StateMachine stateMachine;
 
   stateMachine.defineState(Signals::States::NONE, [&] () { // Define NONE state
-    arduino::digitalWriteFast(40, arduino::LOW);
-    arduino::digitalWriteFast(41, arduino::HIGH);
+    // Run any pre-IDLE code 
 
-    vTaskDelay(pdMS_TO_TICKS(3'000));
-
+    // Move on to IDLE state 
     stateMachine.setState(Signals::States::IDLE);
   });
 
-
   stateMachine.defineState(Signals::States::IDLE, [&] () { // Define IDLE state 
-    arduino::digitalWriteFast(40, arduino::HIGH);
-    arduino::digitalWriteFast(41, arduino::LOW);
 
-    vTaskDelay(pdMS_TO_TICKS(3'000));
+  });
 
-    stateMachine.setState(Signals::States::NONE);
+  stateMachine.defineState(Signals::States::RC, [&] () { // Define RC state 
+    
+  });
+
+  stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state 
+    
+  });
+
+  stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state 
+    // Determine if the car is in need of an urgent stop or an E-Stop
+    
+    // Move on to STOP state if the car doesn't have to cut power
+    stateMachine.setState(Signals::States::STOP);
+  });
+
+  stateMachine.defineState(Signals::States::STOP, [&] () { // Define STOP state 
+    // Perform an urgent stop and then record the error that occured 
+
+    // Move on to RESET state to recalibrate the motors 
+    stateMachine.setState(Signals::States::RESET);
+  });
+
+  stateMachine.defineState(Signals::States::RESET, [&] () { // Define RESET state 
+    // Clear error codes from the ODrive and VESC
+
+    // Move on to IDLE state to return control to the car 
+    stateMachine.setState(Signals::States::IDLE);
   });
 
 
@@ -145,7 +163,22 @@ static void stateMachineTask(void * pvParameters) {
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
     }
 
-    stateMachine.runState();
+    if (MutexValues::isCalibrated) {
+      if (xSemaphoreTake(Mutexes::errorSemaphore, pdMS_TO_TICKS(10)) == pdTRUE) {
+        Queues::logWrite("An error occurred");
+
+        MutexValues::isCalibrated = false;
+        stateMachine.setErrorState();
+      }
+
+      stateMachine.runState();
+    } else {
+      // Run necessary calibrations
+
+      MutexValues::isCalibrated = true;
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(20));
   }
 
   vTaskDelete(nullptr);

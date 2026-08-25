@@ -20,8 +20,8 @@
 using bfs::SbusRx;
 using bfs::SbusData;
 
-#include <TransmitterConstants.hpp>
-#include <IOConstants.hpp>
+#include "TransmitterConstants.hpp"
+#include "IOConstants.hpp"
 using namespace Constants;
 
 #include "Queues.hpp"

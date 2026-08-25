@@ -9,10 +9,7 @@ using Constants::IOConstants;
 void setup() {
   // Set the on board LED pin to output
   arduino::pinMode(IOConstants::ledBuiltIn, arduino::OUTPUT);
-
-  arduino::pinMode(40, arduino::OUTPUT);
-  arduino::pinMode(41, arduino::OUTPUT);
-
+  
   xTaskCreate(        // Create a task to log messages to the Serial monitor 
     printTask,        // Task function to be called
     "Serial Monitor", // Task name as a string
