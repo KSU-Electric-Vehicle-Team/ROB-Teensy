@@ -12,14 +12,21 @@ controller or vehicle is safe to operate.
 1. Install Git and VS Code.
 2. Open this repository in VS Code.
 3. Install the recommended extensions when VS Code prompts you.
-4. Install Doxygen. The current PlatformIO build generates documentation after
-   compiling and expects the `doxygen` command to be available.
-5. In VS Code, run `Tasks: Run Task`, then choose **Build firmware**.
+4. In VS Code, run `Tasks: Run Task`, then choose **Build firmware**.
 
 Members may use another IDE. The equivalent command is:
 
 ```bash
 pio run -e teensy41
+```
+
+## Documentation
+
+Documentation generation is separate from the firmware build so a normal build
+does not change tracked files. Install Doxygen, then run:
+
+```bash
+pio run -e teensy41 -t docs
 ```
 
 ## Contribution path
@@ -45,4 +52,3 @@ pio device monitor -b 115200
 Uploading firmware changes physical hardware behavior. Only upload under the
 test procedure and supervision named in the issue. The repository does not run
 upload commands in CI or automatic VS Code tasks.
-
