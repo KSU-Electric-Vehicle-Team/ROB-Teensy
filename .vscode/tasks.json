@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build firmware",
+      "type": "shell",
+      "command": "pio run -e teensy41",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serial monitor",
+      "type": "shell",
+      "command": "pio device monitor -b 115200",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}
