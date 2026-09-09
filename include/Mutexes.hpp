@@ -16,6 +16,8 @@
 #include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
 
+#include <FlexCAN_T4.h>
+
 namespace RTOS {
   /**
    * @brief A collection of mutexes used through the various tasks
@@ -23,6 +25,7 @@ namespace RTOS {
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
     static SemaphoreHandle_t commandMutex;  
+    static SemaphoreHandle_t canMutex;
     static SemaphoreHandle_t rcMutex;       
 
     static SemaphoreHandle_t errorSemaphore;
@@ -46,6 +49,8 @@ namespace RTOS {
     uint16_t throttle;      ///< RC throttle input
     uint16_t steering;      ///< RC steering input
 
+    uint8_t steeringTemp;   ///< Steering ODrive temperature in degrees celcius
+
     /**
      * @brief Function used to format the buffer field of the packet_t struct
      */
@@ -53,7 +58,7 @@ namespace RTOS {
       snprintf(
         this->buffer,
         sizeof(this->buffer),
-        "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld",
+        "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld, %u",
         this->state,
         this->rpm,
         this->steeringAngle,
@@ -61,7 +66,8 @@ namespace RTOS {
         this->throttle,
         this->steering,
         this->driveRevolutions,
-        this->encoderCount
+        this->encoderCount,
+        this->steeringTemp
       );
     }
   };
@@ -151,11 +157,16 @@ namespace RTOS {
    * @brief Values used through various tasks to be protected by mutex 
    */
   struct MutexValues {
+    static FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canBus;
+
     static transmitter_t transmitterValues; 
     static telemetry_t pandaPacket;         
-    static command_t commands;              
+    static command_t commands;  
+    
+    static float steeringCenter;
 
-    static bool isCalibrated; // Condition to denote whether or not the car is calibrated 
+    static bool canSetupFlag;
+    static bool oDriveSetupFlag;
   };
 
 
@@ -164,7 +175,9 @@ namespace RTOS {
   SemaphoreHandle_t Mutexes::canMutex = xSemaphoreCreateMutex();        ///< Mutex for CAN communications
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         ///< Mutex for RC values 
 
-  SemaphoreHandle_t Mutexes::errorSemaphore = xSemaphoreCreateBinary(); // Binary semaphore for error handling
+  SemaphoreHandle_t Mutexes::errorSemaphore = xSemaphoreCreateBinary(); ///< Binary semaphore for error handling
+
+  FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> MutexValues::canBus;        ///< CAN bus instance
   
   // Structs for value packets 
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
@@ -172,7 +185,10 @@ namespace RTOS {
   command_t MutexValues::commands;              ///< Values for the autonomous commands 
 
   // Other mutex values
-  bool MutexValues::isCalibrated;               // Value to denote whether or not the car has been calibrated 
+  float MutexValues::steeringCenter;            ///< Value of the steering center position in turns 
+
+  bool MutexValues::canSetupFlag = false;       ///< Flag to denote whether or not CAN bus has been setup
+  bool MutexValues::oDriveSetupFlag = false;    ///< Flag to denote whether or not ODrive CAN has been setup
 }
 
 #endif // MUTEXES

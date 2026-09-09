@@ -24,7 +24,7 @@ namespace Constants {
     static constexpr HardwareSerial & oDriveSerial = Serial6; ///< UART used for the ODrive
     static constexpr HardwareSerial & vescSerial = Serial2;   ///< UART used for the VESC
     
-    static const size_t canBaudrate = 250'000; ///< CAN bus baudrate in bits per second
+    static const size_t canBaudrate = 250'000;    ///< CAN bus baudrate in bits per second
 
     static const size_t oDriveBaudrate = 115'200; ///< ODrive serial baudrate in bits per second
     static const size_t vescBaudrate = 115'200;   ///< VESC serial baudrate in bits per second

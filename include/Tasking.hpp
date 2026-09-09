@@ -16,6 +16,7 @@
 *//*---------------------------------------------------------------------------*/
 
 #include <EVT_RC.hpp>
+#include <EVT_ODriveCAN.hpp>
 
 #include "Mutexes.hpp"
 using RTOS::Mutexes;
@@ -71,33 +72,6 @@ static void blinkTask(void * pvParameters) {
 
 
 /**
- * @brief Task used to print the formatted Ethernet buffer to Serial
- */
-static void messageTask(void * pvParameters) {
-  while (true) {
-    if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
-      if (xSemaphoreTake(Mutexes::rcMutex, 0) == pdTRUE) {
-        MutexValues::pandaPacket.throttle = MutexValues::transmitterValues.leftJoystick.y;
-        MutexValues::pandaPacket.steering = MutexValues::transmitterValues.rightJoystick.x;
-
-        xSemaphoreGive(Mutexes::rcMutex);
-      }
-
-      MutexValues::pandaPacket.format();                 // Format the telemetry buffer with the given data in the pandaPacket
-      Queues::logWrite(MutexValues::pandaPacket.buffer); // Put the pandaPacket buffer in the log queue
-
-      xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
-    }
-
-    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::serialPrintFrequency));
-  }
-
-  // Delete the task if the while loop exits
-  vTaskDelete(nullptr);
-}
-
-
-/**
  * @brief Task used to update the RC values from the SBUS
  */
 static void rcTask(void * pvParameters) {
@@ -119,6 +93,47 @@ static void rcTask(void * pvParameters) {
 
 
 /**
+ * @brief Task used to control the ODrive over CAN bus
+ */
+static void oDriveTask(void * pvParameters) {
+  // Define the steering motor and ODriver instance 
+  ODriveCAN steeringODrive {wrap_can_intf(MutexValues::canBus), IOConstants::steeringMotorCanID};
+  MotorControls::ODriver steeringMotor {steeringODrive, IOConstants::steeringMotorCanID};
+
+  while (true) {
+    if (xSemaphoreTake(Mutexes::canMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+      if (MutexValues::oDriveSetupFlag) { // Run ODrive code if ODrive CAN has been setup 
+        if (steeringMotor.getCalibrationFlag()) {
+          if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+            // Update the ODrive motor position using Mutex values 
+            steeringMotor.update(MutexValues::commands.steering, MutexValues::commands.isSteeringLimited);
+  
+            xSemaphoreGive(Mutexes::commandMutex);
+          }
+        } else {
+          steeringMotor.calibrate(); // Run the calibration sequence 
+          MutexValues::steeringCenter = steeringMotor.getCenterPosition(); // Record the center position 
+        }
+
+      } else { // Run setup functions if CAN hasn't been setup 
+        if (!MutexValues::canSetupFlag) {
+          MutexValues::canSetupFlag = MotorControls::setupCan();
+        }
+
+        MutexValues::oDriveSetupFlag = steeringMotor.setup();
+      }
+
+      xSemaphoreGive(Mutexes::canMutex);
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
+  }
+
+  vTaskDelete(nullptr);
+}
+
+
+/**
  * @brief Task used to update and run the state machine
  */
 static void stateMachineTask(void * pvParameters) {
@@ -132,15 +147,36 @@ static void stateMachineTask(void * pvParameters) {
   });
 
   stateMachine.defineState(Signals::States::IDLE, [&] () { // Define IDLE state 
+    // Run any IDLE code 
 
+    // Move on to RC state
+    stateMachine.setState(Signals::States::RC);
   });
 
   stateMachine.defineState(Signals::States::RC, [&] () { // Define RC state 
-    
+    if (xSemaphoreTake(Mutexes::commandMutex, 0) == pdTRUE && xSemaphoreTake(Mutexes::rcMutex, 0) == pdTRUE) {
+      MutexValues::commands.isSteeringLimited = true; // Set the steering limiter to true 
+      MutexValues::commands.steering = map(           // Map the deadbanded steering input to position values
+        (float)MutexValues::transmitterValues.leftJoystick.deadband().x,
+        (float)TransmitterConstants::minRC,
+        (float)TransmitterConstants::maxRC,
+        MutexValues::steeringCenter - ControlConstants::steeringMaxTurns,
+        MutexValues::steeringCenter + ControlConstants::steeringMaxTurns
+      );
+
+      xSemaphoreGive(Mutexes::rcMutex);
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
   });
 
   stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state 
-    
+    // Set the motor commands with recieved packet values
+    if (xSemaphoreTake(Mutexes::commandMutex, 0) == pdTRUE) {
+      MutexValues::commands.isSteeringLimited = false;
+      MutexValues::commands.isDriveLimited = false;
+
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
   });
 
   stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state 
@@ -173,18 +209,15 @@ static void stateMachineTask(void * pvParameters) {
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
     }
 
+    // Set the state machine into error state if the binary semaphore can be taken 
     if (xSemaphoreTake(Mutexes::errorSemaphore, pdMS_TO_TICKS(10)) == pdTRUE) {
       stateMachine.setErrorState();
     }
 
-      stateMachine.runState();
-    } else {
-      // Run necessary calibrations
+    // Run the current state in the state machine
+    stateMachine.runState();
 
-      MutexValues::isCalibrated = true;
-    }
-
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 
   vTaskDelete(nullptr);

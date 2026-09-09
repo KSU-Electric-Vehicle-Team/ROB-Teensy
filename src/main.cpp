@@ -31,6 +31,15 @@ void setup() {
   xTaskCreate( // Create a task to update the RC values from SBUS
     rcTask,
     "RC Updates",
+    128,
+    NULL,
+    3,
+    NULL
+  );
+
+  xTaskCreate( // Create a task to update the ODrive using CAN bus
+    oDriveTask,
+    "ODrive CAN Updates",
     256,
     NULL,
     3,
