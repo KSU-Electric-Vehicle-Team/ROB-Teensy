@@ -30,13 +30,13 @@ namespace Signals {
    * @brief Enum used to denote the current state of the system
    */
   typedef enum : uint8_t {
-    NONE = 0,
-    IDLE,
-    RC,
-    AUTO,
-    ERROR,
-    STOP,
-    RESET
+    NONE = 0, ///< State for pre-idle tasks 
+    IDLE,     ///< State for idle tasks 
+    RC,       ///< State for remote control tasks
+    AUTO,     ///< State for autonomous tasks 
+    ERROR,    ///< State for error monitoring
+    STOP,     ///< State for error handling
+    RESET     ///< State for resetting 
   } States;
 
 
@@ -44,10 +44,10 @@ namespace Signals {
    * @brief Struct used for control over states
    */
   typedef struct {
-    States state;              // State enum for map indexing
-    const char * name;         // Name of the state as a string
+    States state;              ///< State enum for map indexing
+    const char * name;         ///< Name of the state as a string
 
-    function<void(void)> func; // State function 
+    function<void(void)> func; ///< State function 
   } state_t;
 
 

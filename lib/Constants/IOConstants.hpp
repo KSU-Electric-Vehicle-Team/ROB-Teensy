@@ -20,38 +20,23 @@ namespace Constants {
    * @brief Constants used to interface input and output 
    */
   struct IOConstants {
-    static constexpr HardwareSerial & sBusSerial = Serial7;   // UART used for the RC receiver
-    static constexpr HardwareSerial & oDriveSerial = Serial6; // UART used for the ODrive
-    static constexpr HardwareSerial & vescSerial = Serial2;   // UART used for the VESC
+    static constexpr HardwareSerial & sBusSerial = Serial7;   ///< UART used for the RC receiver
+    static constexpr HardwareSerial & oDriveSerial = Serial6; ///< UART used for the ODrive
+    static constexpr HardwareSerial & vescSerial = Serial2;   ///< UART used for the VESC
     
-    static const size_t oDriveBaudrate = 115'200;
-    static const size_t vescBaudrate = 115'200;
+    static const size_t canBaudrate = 250'000; ///< CAN bus baudrate in bits per second
 
-    static constexpr double serialPrintFrequency = 5.0;
-    static constexpr double telemetryFrequency = 8.0;
-    static constexpr double ledBlinkFrequency = 1.0;
-    static constexpr double updateFrequency = 80.0;
+    static const size_t oDriveBaudrate = 115'200; ///< ODrive serial baudrate in bits per second
+    static const size_t vescBaudrate = 115'200;   ///< VESC serial baudrate in bits per second
 
-    static constexpr uint16_t driveEncoderPulsesPerRev = 600;
+    static constexpr double serialPrintFrequency = 5.0; ///< Times per second to output to Serial Monitor 
+    static constexpr double telemetryFrequency = 8.0;   ///< Times per second to send telemetry to high level 
+    static constexpr double ledBlinkFrequency = 1.0;    ///< Times per second to blink the LED on the Teensy 
+    static constexpr double updateFrequency = 80.0;     ///< Times per second to update the RC control values 
+
+    static const uint8_t steeringMotorCanID = 0; ///< CAN ID for the steering motor ODrive 
     
-    static const uint8_t ledBuiltIn = 13; // Built in LED pin
-
-    static const uint8_t oDriveRelay = 3;
-    static const uint8_t eBrakeRelay = 4;
-    static const uint8_t vescRelay = 5;
-
-    static const uint8_t yellowLedRelay = 21;
-    static const uint8_t greenLedRelay = 22;
-    static const uint8_t redLedRelay = 23;
-
-    static const uint8_t fanPin = 29; 
-
-    static const uint8_t dynamicBrakePulsePin = 31;
-    static const uint8_t dynamicBrakeDirPin = 32;
-    static const uint8_t dynamicBrakeLimitSwitchPin = 33;
-
-    static constexpr uint8_t driveEncoderPinA = 1; // E38S6G5 channel A
-    static constexpr uint8_t driveEncoderPinB = 0; // E38S6G5 channel B
+    static const uint8_t ledBuiltIn = 13; ///< Built in LED pin
   };
 }
 

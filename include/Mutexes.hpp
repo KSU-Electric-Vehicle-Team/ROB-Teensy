@@ -32,19 +32,19 @@ namespace RTOS {
   /**
    * @brief Struct used to format Ethernet packets
    */
-  typedef struct {
-    char buffer[128];       // Message buffer for the Ethernet connection
-    char state[8];          // Current state as a string
+  struct telemetry_t {
+    char buffer[128];       ///< Message buffer for the Ethernet connection
+    char state[8];          ///< Current state as a string
     
-    int32_t encoderCount;   // Encoder tick count since boot
+    int32_t encoderCount;   ///< Encoder tick count since boot
 
-    float driveRevolutions; // Number of turns of the drive motor 
-    float steeringAngle;    // Current steering angle
-    float oDriveTarget;     // ODrive target angle 
-    float rpm;              // Drive motor RPM target
+    float driveRevolutions; ///< Number of turns of the drive motor 
+    float steeringAngle;    ///< Current steering angle
+    float oDriveTarget;     ///< ODrive target angle 
+    float rpm;              ///< Drive motor RPM target
 
-    uint16_t throttle;      // RC throttle input
-    uint16_t steering;      // RC steering input
+    uint16_t throttle;      ///< RC throttle input
+    uint16_t steering;      ///< RC steering input
 
     /**
      * @brief Function used to format the buffer field of the packet_t struct
@@ -64,36 +64,53 @@ namespace RTOS {
         this->encoderCount
       );
     }
-  } telemetry_t;
+  };
 
 
   /**
    * @brief Struct used to format UDP autonomous commands
    */
-  typedef struct {
-    char stateString[8];
+  struct command_t {
+    char stateString[8];    ///< Current state of the system as a string
 
-    float steering;
-    float brake;
-    float erpm;
+    float steering;         ///< Steering target in turns 
+    float brake;            ///< Drive brake current in amps
+    float erpm;             ///< Drive ERPM 
 
-    bool emergency;
-  } command_t;
+    bool isSteeringLimited; ///< Rate limit flag for the steering motor
+    bool isDriveLimited;    ///< Rate limit flag for the drive motor
+
+    bool autonomous;        ///< Autonomous Flag
+    bool emergency;         ///< Emergency flag
+  };
 
 
   /**
    * @brief Struct used for creation and storage of joystick values 
    */
-  typedef struct {
-    uint16_t x; // X axis value
-    uint16_t y; // Y axis value
-  } joystick_t;
+  struct joystick_t {
+    uint16_t x; ///< X axis value
+    uint16_t y; ///< Y axis value
+
+    /**
+     * @brief Applies a deadband to the joystick values
+     * 
+     * @return joystick_t of either {midRC, midRC} or {x, y}
+     */
+    joystick_t deadband() {
+      if ((x > TransmitterConstants::deadbandBounds[0] && x < TransmitterConstants::deadbandBounds[1]) && (y > TransmitterConstants::deadbandBounds[0] && y < TransmitterConstants::deadbandBounds[1])) {
+        return {TransmitterConstants::midRC, TransmitterConstants::midRC};
+      } else {
+        return {x, y};
+      }
+    }
+  };
 
 
   /**
    * @brief Struct used for storing values from the RC transmitter
    */
-  typedef struct {
+  struct transmitter_t {
     joystick_t leftJoystick;
     joystick_t rightJoystick;
 
@@ -127,7 +144,7 @@ namespace RTOS {
       vra = transmitter->getChannelValue(Signals::ChannelRC::VRC, isMapped);
       vra = transmitter->getChannelValue(Signals::ChannelRC::VRD, isMapped);
     }
-  } transmitter_t;
+  };
 
 
   /**
@@ -142,16 +159,17 @@ namespace RTOS {
   };
 
 
-  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();  // Mutex for Ethernet telemetry values 
-  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();    // Mutex for motor commnds 
-  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         // Mutex for RC values 
+  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();  ///< Mutex for Ethernet telemetry values 
+  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();    ///< Mutex for motor commands 
+  SemaphoreHandle_t Mutexes::canMutex = xSemaphoreCreateMutex();        ///< Mutex for CAN communications
+  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         ///< Mutex for RC values 
 
   SemaphoreHandle_t Mutexes::errorSemaphore = xSemaphoreCreateBinary(); // Binary semaphore for error handling
   
   // Structs for value packets 
-  transmitter_t MutexValues::transmitterValues; // Vlaues from the RC transmitter
-  telemetry_t MutexValues::pandaPacket;         // Values to send to the Panda packet 
-  command_t MutexValues::commands;              // Values for the autonomous commands 
+  transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
+  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet 
+  command_t MutexValues::commands;              ///< Values for the autonomous commands 
 
   // Other mutex values
   bool MutexValues::isCalibrated;               // Value to denote whether or not the car has been calibrated 

@@ -22,19 +22,10 @@ void setup() {
   xTaskCreate( // Create a task to blink the onboard LED 
     blinkTask, 
     "Blink",   
-    128,       
+    64,       
     NULL,      
     2,         
     NULL       
-  );
-
-  xTaskCreate( // Create a task to write the Panda telemetry buffer to Serial 
-    messageTask,
-    "Data Logging",
-    256,
-    NULL,
-    1,
-    NULL
   );
 
   xTaskCreate( // Create a task to update the RC values from SBUS

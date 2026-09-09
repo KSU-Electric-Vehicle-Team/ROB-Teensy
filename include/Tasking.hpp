@@ -6,7 +6,7 @@
  * @file   Tasking.hpp
  * @brief  Methods used for RTOS tasks 
  * 
- * The metohods and structs found in tasking are used to make the main loop 
+ * The methods and structs found in tasking are used to make the main loop 
  * a bit more streamlined. Essentially, every task method for the system is 
  * defined here and later used in the setup function in main to actually create 
  * and run the tasks with FreeRTOS
@@ -26,12 +26,22 @@ using RTOS::MutexValues;
  * @brief Task used to print messages from the log queue to Serial monitor 
  */
 static void printTask(void * pvParameters) {
-  const char * msg;
+  const char * msg; // Log message buffer 
+  const char * err; // Error message buffer
 
   while (true) {
     // Print a message to the Serial Monitor if one is in the queue
     if (xQueueReceive(Queues::logQueue, (void *)&msg, pdTICKS_TO_MS(50)) == pdTRUE) {
       Serial.println(msg);
+    }
+
+    // Prints a message to the Serial Monitor for error logging
+    if (xQueueReceive(Queues::errorQueue, (void *)&err, pdTICKS_TO_MS(50)) == pdTRUE) {
+      Serial.println("=============== ERROR =============");
+      Serial.println(err);
+      Serial.println("===================================");
+
+      xSemaphoreGive(Mutexes::errorSemaphore);
     }
   }
 
@@ -163,13 +173,9 @@ static void stateMachineTask(void * pvParameters) {
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex 
     }
 
-    if (MutexValues::isCalibrated) {
-      if (xSemaphoreTake(Mutexes::errorSemaphore, pdMS_TO_TICKS(10)) == pdTRUE) {
-        Queues::logWrite("An error occurred");
-
-        MutexValues::isCalibrated = false;
-        stateMachine.setErrorState();
-      }
+    if (xSemaphoreTake(Mutexes::errorSemaphore, pdMS_TO_TICKS(10)) == pdTRUE) {
+      stateMachine.setErrorState();
+    }
 
       stateMachine.runState();
     } else {
