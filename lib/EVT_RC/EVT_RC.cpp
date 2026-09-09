@@ -61,20 +61,6 @@ namespace Signals {
   } 
 
 
-  void ControlRC::printChannel(ChannelRC channel, bool isMapped) {
-    snprintf(
-      channelPrint,
-      sizeof(channelPrint),
-      "Ch[%s%u] - %u",
-      int(channel + 1) < 10 ? "0" : "",
-      int(channel + 1),
-      getChannelValue(channel, isMapped)
-    );
-
-    Queues::logWrite(channelPrint);
-  }
-
-
   uint16_t ControlRC::getChannelValue(ChannelRC channel, bool mapChannel) {
     if (mapChannel) {
       switch (channel) {
@@ -131,24 +117,7 @@ namespace Signals {
   }
 
 
-  SbusData ControlRC::getData() const {
-    return data;
-  }
-
-
   bool ControlRC::mapSwitches(uint16_t val) {
     return (val >= (0.90 * TransmitterConstants::maxRC));
-  }
-
-
-  template <class T>
-  T ControlRC::mapToPercent(T value, const T (&mapArray)[2]) {
-    return map(
-      value,
-      mapArray[0],
-      mapArray[1],
-      0,
-      100
-    );
   }
 }
