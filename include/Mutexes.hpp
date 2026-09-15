@@ -2,13 +2,13 @@
 #define MUTEXES
 
 /*-----------------------------------------------------------------------------*/
-/** 
+/**
  * @file   Mutexes.hpp
- * @brief  Header for Mutexes struct 
- * 
- * The Mutexes struct is used for the definition of RTOS Mutexes used for 
+ * @brief  Header for Mutexes struct
+ *
+ * The Mutexes struct is used for the definition of RTOS Mutexes used for
  * making tasks thread safe throughout the code
- * 
+ *
  * @author Lilia Turbeville
  * @date   June 16, 2026
 *//*---------------------------------------------------------------------------*/
@@ -17,6 +17,7 @@
 #include <EVT_RC.hpp>
 
 #include <FlexCAN_T4.h>
+#include "timers.h"
 
 namespace RTOS {
   /**
@@ -24,12 +25,14 @@ namespace RTOS {
    */
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
-    static SemaphoreHandle_t commandMutex;  
+    static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t canMutex;
-    static SemaphoreHandle_t rcMutex;       
+    static SemaphoreHandle_t rcMutex;
 
     static SemaphoreHandle_t errorSemaphore;
-  }; 
+
+    static TimerHandle_t blinkTimer;
+  };
 
 
   /**
@@ -38,12 +41,12 @@ namespace RTOS {
   struct telemetry_t {
     char buffer[128];       ///< Message buffer for the Ethernet connection
     char state[8];          ///< Current state as a string
-    
+
     int32_t encoderCount;   ///< Encoder tick count since boot
 
-    float driveRevolutions; ///< Number of turns of the drive motor 
+    float driveRevolutions; ///< Number of turns of the drive motor
     float steeringAngle;    ///< Current steering angle
-    float oDriveTarget;     ///< ODrive target angle 
+    float oDriveTarget;     ///< ODrive target angle
     float rpm;              ///< Drive motor RPM target
 
     uint16_t throttle;      ///< RC throttle input
@@ -79,9 +82,9 @@ namespace RTOS {
   struct command_t {
     char stateString[8];    ///< Current state of the system as a string
 
-    float steering;         ///< Steering target in turns 
+    float steering;         ///< Steering target in turns
     float brake;            ///< Drive brake current in amps
-    float erpm;             ///< Drive ERPM 
+    float erpm;             ///< Drive ERPM
 
     bool isSteeringLimited; ///< Rate limit flag for the steering motor
     bool isDriveLimited;    ///< Rate limit flag for the drive motor
@@ -92,7 +95,7 @@ namespace RTOS {
 
 
   /**
-   * @brief Struct used for creation and storage of joystick values 
+   * @brief Struct used for creation and storage of joystick values
    */
   struct joystick_t {
     uint16_t x; ///< X axis value
@@ -100,7 +103,7 @@ namespace RTOS {
 
     /**
      * @brief Applies a deadband to the joystick values
-     * 
+     *
      * @return joystick_t of either {midRC, midRC} or {x, y}
      */
     joystick_t deadband() {
@@ -121,11 +124,11 @@ namespace RTOS {
     joystick_t rightJoystick;
 
     uint16_t swa, swb, swc, swd, swe, swf, swg, swh;
-    uint16_t vra, vrb, vrc, vrd; 
+    uint16_t vra, vrb, vrc, vrd;
 
     /**
      * @brief Updates the values of the struct
-     * 
+     *
      * @param transmitter ControlRC instance to use to update the values
      * @param isMapped Condition to determine whether to map the channels or not (Default false)
      */
@@ -154,41 +157,47 @@ namespace RTOS {
 
 
   /**
-   * @brief Values used through various tasks to be protected by mutex 
+   * @brief Values used through various tasks to be protected by mutex
    */
   struct MutexValues {
     static FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canBus;
 
-    static transmitter_t transmitterValues; 
-    static telemetry_t pandaPacket;         
-    static command_t commands;  
-    
+    static transmitter_t transmitterValues;
+    static telemetry_t pandaPacket;
+    static command_t commands;
+
     static float steeringCenter;
 
     static bool canSetupFlag;
     static bool oDriveSetupFlag;
+
+    static bool ledState;
   };
 
 
-  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();  ///< Mutex for Ethernet telemetry values 
-  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();    ///< Mutex for motor commands 
+  SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex();  ///< Mutex for Ethernet telemetry values
+  SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();    ///< Mutex for motor commands
   SemaphoreHandle_t Mutexes::canMutex = xSemaphoreCreateMutex();        ///< Mutex for CAN communications
-  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         ///< Mutex for RC values 
+  SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();         ///< Mutex for RC values
 
   SemaphoreHandle_t Mutexes::errorSemaphore = xSemaphoreCreateBinary(); ///< Binary semaphore for error handling
 
+  TimerHandle_t Mutexes::blinkTimer;                                    ///< Timer used to blink the onboard LED
+
   FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> MutexValues::canBus;        ///< CAN bus instance
-  
-  // Structs for value packets 
+
+  // Structs for value packets
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
-  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet 
-  command_t MutexValues::commands;              ///< Values for the autonomous commands 
+  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet
+  command_t MutexValues::commands;              ///< Values for the autonomous commands
 
   // Other mutex values
-  float MutexValues::steeringCenter;            ///< Value of the steering center position in turns 
+  float MutexValues::steeringCenter;            ///< Value of the steering center position in turns
 
   bool MutexValues::canSetupFlag = false;       ///< Flag to denote whether or not CAN bus has been setup
   bool MutexValues::oDriveSetupFlag = false;    ///< Flag to denote whether or not ODrive CAN has been setup
+
+  bool MutexValues::ledState = false;
 }
 
 #endif // MUTEXES
