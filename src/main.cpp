@@ -22,15 +22,6 @@ void setup() {
     NULL              // Task handle
   );
 
-  xTaskCreate( // Create a task to blink the onboard LED
-    blinkTask,
-    "Blink",
-    128,
-    NULL,
-    2,
-    NULL
-  );
-
   xTaskCreate( // Create a task to update the RC values from SBUS
     rcTask,
     "RC Updates",
@@ -57,6 +48,18 @@ void setup() {
     4,
     NULL
   );
+
+  Mutexes::blinkTimer = xTimerCreate(
+    "Onboard LED blink",                                                                  // Timer name
+    pdMS_TO_TICKS(IOConstants::ledBlinkFrequency * ConversionConstants::secToMillis / 2), // Timer period
+    pdTRUE,                                                                               // Auto-reload
+    (void *)0,                                                                            // Timer ID
+    blinkCallback                                                                         // Callback function
+  );
+
+
+  // Start the timer
+  xTimerStart(Mutexes::blinkTimer, portMAX_DELAY);
 
   // Start the RTOS scheduler
   vTaskStartScheduler();

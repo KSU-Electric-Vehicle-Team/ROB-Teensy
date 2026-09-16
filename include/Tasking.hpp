@@ -24,6 +24,18 @@ using RTOS::MutexValues;
 
 
 /**
+ * @brief Timer callback used to blink the onboard LED
+ */
+static void blinkCallback(TimerHandle_t xTimer) {
+  // Toggle the LED state
+  MutexValues::ledState = !MutexValues::ledState;
+
+  // Write the LED state to the LED pin
+  digitalWriteFast(IOConstants::ledBuiltIn, MutexValues::ledState ? arduino::HIGH : arduino::LOW);
+}
+
+
+/**
  * @brief Task used to print messages from the queues to Serial monitor
  */
 static void printTask(void * pvParameters) {
@@ -44,26 +56,6 @@ static void printTask(void * pvParameters) {
 
       xSemaphoreGive(Mutexes::errorSemaphore);
     }
-  }
-
-  // Delete the task if the while loop exits
-  vTaskDelete(nullptr);
-}
-
-
-/**
- * @brief Task used to blink the onboard LED
- */
-static void blinkTask(void * pvParameters) {
-  bool ledState = false; // Current LED state as a boolean
-
-  while (true) {
-    // Toggle the LED state
-    ledState = !ledState;
-
-    // Write the LED state to the LED pin
-    digitalWriteFast(IOConstants::ledBuiltIn, ledState ? arduino::HIGH : arduino::LOW);
-    vTaskDelay(pdMS_TO_TICKS(500 / IOConstants::ledBlinkFrequency));
   }
 
   // Delete the task if the while loop exits
