@@ -4,11 +4,11 @@
 /*-----------------------------------------------------------------------------*/
 /**
  * @file   ConversionConstants.hpp
- * @brief  Header for ControlConstants struct
+ * @brief  Header for ConversionConstants struct
  *
- * The ControlConstants struct is used for the definition of various constants
- * that are used for system behaviors. For example, you would find the values
- * for PID gains or slewrates here.
+ * The ConversionConstants struct is used for the definition of various constants
+ * that are used for converting between units. For example, this file contains
+ * conversion factors for degrees to radians, seconds to milliseconds, and more
  *
  * @author Lilia Turbeville
  * @date   March 18, 2026
