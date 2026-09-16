@@ -15,7 +15,7 @@ namespace Signals {
       case (mapType::JOYSTICK):
         joystickMap[0] = mapArray[0];
         joystickMap[1] = mapArray[1];
-        
+
         break;
       case (mapType::SWITCH):
         switchMap[0] = mapArray[0];
@@ -58,20 +58,6 @@ namespace Signals {
     }
 
     return hasValidFrame && ((millis() - lastValidFrame) <= validFrameTimeout);
-  } 
-
-
-  void ControlRC::printChannel(ChannelRC channel, bool isMapped) {
-    snprintf(
-      channelPrint,
-      sizeof(channelPrint),
-      "Ch[%s%u] - %u",
-      int(channel + 1) < 10 ? "0" : "",
-      int(channel + 1),
-      getChannelValue(channel, isMapped)
-    );
-
-    Queues::logWrite(channelPrint);
   }
 
 
@@ -83,10 +69,10 @@ namespace Signals {
         case (ChannelRC::RIGHT_Y):
         case (ChannelRC::LEFT_Y):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            joystickMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            joystickMap[0],
             joystickMap[1]
           );
         case (ChannelRC::SWA):
@@ -94,10 +80,10 @@ namespace Signals {
         case (ChannelRC::SWF):
         case (ChannelRC::SWH):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            switchMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            switchMap[0],
             switchMap[1]
           );
         case (ChannelRC::SWB):
@@ -116,39 +102,22 @@ namespace Signals {
         case (ChannelRC::VRC):
         case (ChannelRC::VRD):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            knobMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            knobMap[0],
             knobMap[1]
           );
         default:
           return channelVal[channel];
       }
-    } 
-    
+    }
+
     return channelVal[channel];
-  }
-
-
-  SbusData ControlRC::getData() const {
-    return data;
   }
 
 
   bool ControlRC::mapSwitches(uint16_t val) {
     return (val >= (0.90 * TransmitterConstants::maxRC));
-  }
-
-
-  template <class T>
-  T ControlRC::mapToPercent(T value, const T (&mapArray)[2]) {
-    return map(
-      value,
-      mapArray[0],
-      mapArray[1],
-      0,
-      100
-    );
   }
 }
