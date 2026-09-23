@@ -101,6 +101,7 @@ static void stateMachineTask(void * pvParameters) {
   });
 
   stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state
+
   });
 
   stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state
