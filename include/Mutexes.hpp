@@ -15,6 +15,7 @@
 
 #include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
+#include <EVT_Ethernet.hpp>
 
 #include "timers.h"
 

@@ -28,7 +28,7 @@ namespace Signals {
       IPAddress & teensyIP;       // IPAddress reference for the Teensy 4.1
       IPAddress & pandaIP;        // IPAddress reference for the Latte Panda Sigma
 
-      byte (&teensyMac)[8];       // Mac address for the Teensy 4.1
+      byte (&teensyMac)[6];       // Mac address for the Teensy 4.1
 
       char packetBuffer[128];     // UDP packet buffer
 
@@ -44,7 +44,7 @@ namespace Signals {
        * @param ipPanda IP address of the Latte Panda Sigma
        * @param mac Mac address of the Teensy 4.1
        */
-      EthernetEVT(IPAddress ipTeensy, IPAddress ipPanda, byte (&mac)[8]);
+      EthernetEVT(IPAddress ipTeensy, IPAddress ipPanda, byte (&mac)[6]);
 
 
       /**
@@ -62,9 +62,9 @@ namespace Signals {
 
 
       /**
-       * @brief Receives the formatted telemetry packet from the Latte Panda Sigma
+       * @brief Receives and parses the formatted telemetry packet from the Latte Panda Sigma
        */
-      std::string receiveTelemetry();
+      void receiveTelemetry();
   };
 }
 

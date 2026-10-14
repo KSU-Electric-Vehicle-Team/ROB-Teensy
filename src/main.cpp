@@ -37,6 +37,15 @@ void setup() {
     NULL
   );
 
+  xTaskCreate( // Create a task to handle the ethernet communication
+    ethernetTask,
+    "Ethernet Task",
+    128,
+    NULL,
+    4,
+    NULL
+  );
+
   Mutexes::blinkTimer = xTimerCreate(
     "Onboard LED blink",                                                                  // Timer name
     pdMS_TO_TICKS(IOConstants::ledBlinkFrequency * ConversionConstants::secToMillis / 2), // Timer period

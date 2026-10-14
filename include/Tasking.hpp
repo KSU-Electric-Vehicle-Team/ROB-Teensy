@@ -76,6 +76,44 @@ static void rcTask(void * pvParameters) {
 }
 
 
+static void ethernetTask(void * pvParameters) {
+  // Make ethernet object
+  IPAddress teensyIP {192, 168, 0, 177};
+  IPAddress panda {169, 254, 1, 10};
+  byte teensy[6] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+
+  Signals::EthernetEVT ethernet {teensyIP, panda, teensy};
+  // Setup ethernet
+  ethernet.setup();
+
+  while (true) {
+    // Format telemetry packet.format()
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+      MutexValues::pandaPacket.format();
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
+    // send telemetry (MutexValues::pandaPacket.buffer)
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+      ethernet.sendTelemetry(MutexValues::pandaPacket.buffer);
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
+    // if auto state, recieve telemetry, check packet.state to figure out
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+      if (!strcmp(MutexValues::pandaPacket.state, "AUTO")) {
+        ethernet.receiveTelemetry();
+      }
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
+    // set recieved values to MutexValues::commands
+    if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(15)) == pdTRUE) {
+      MutexValues::commands.erpm = MutexValues::pandaPacket.rpm;
+      MutexValues::commands.steering = MutexValues::pandaPacket.oDriveTarget;
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
+  }
+}
+
+
 /**
  * @brief Task used to update and run the state machine
  */
