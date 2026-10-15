@@ -31,31 +31,44 @@ namespace Signals {
     receivedLength = udp.read(packetBuffer, sizeof(packetBuffer) - 1);
 
     if (receivedLength > 0) {
-      char * token = strtok(packetBuffer, ",");
+      char * token = strtok(packetBuffer, ",");;
+      MutexValues::pandaPacket.sequence = 0;
       int index = 0;
 
       while (token != nullptr) {
         switch (index) {
           case 0:
-            strcpy(MutexValues::pandaPacket.state, token);
+            MutexValues::pandaPacket.sequence = atoi(token);
             break;
           case 1:
-            MutexValues::pandaPacket.rpm = atoff(token);
+            MutexValues::pandaPacket.sampleTime = atol(token);
             break;
           case 2:
-            MutexValues::pandaPacket.oDriveTarget = atoff(token);
+            strcpy(MutexValues::pandaPacket.state, token);
             break;
           case 3:
-            MutexValues::pandaPacket.throttle = atoi(token);
+            MutexValues::pandaPacket.rpm = atoff(token);
             break;
           case 4:
-            MutexValues::pandaPacket.steering = atoi(token);
+            MutexValues::pandaPacket.oDriveTarget = atoff(token);
             break;
           case 5:
-            MutexValues::pandaPacket.driveRevolutions = atoff(token);
+            MutexValues::pandaPacket.throttle = atoi(token);
             break;
           case 6:
+            MutexValues::pandaPacket.steering = atoi(token);
+            break;
+          case 7:
+            MutexValues::pandaPacket.driveRevolutions = atoff(token);
+            break;
+          case 8:
             MutexValues::pandaPacket.encoderCount = atol(token);
+            break;
+          case 9:
+            MutexValues::pandaPacket.commandAge = atol(token);
+            break;
+          case 10:
+            MutexValues::pandaPacket.lastCommandSequence = atoi(token);
             break;
         }
         token = strtok(nullptr, ",");

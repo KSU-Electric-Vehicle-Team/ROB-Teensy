@@ -89,21 +89,33 @@ static void ethernetTask(void * pvParameters) {
   while (true) {
     // Format telemetry packet.format()
     if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
-      MutexValues::pandaPacket.format();
-      xSemaphoreGive(Mutexes::telemetryMutex);
-    }
-    // send telemetry (MutexValues::pandaPacket.buffer)
-    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+      // send telemetry (MutexValues::pandaPacket.buffer)
       ethernet.sendTelemetry(MutexValues::pandaPacket.buffer);
-      xSemaphoreGive(Mutexes::telemetryMutex);
-    }
-    // if auto state, recieve telemetry, check packet.state to figure out
-    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+
+      // set the previous command sequence
+      MutexValues::pandaPacket.lastCommandSequence = MutexValues::pandaPacket.sequence;
+
+      // set current sequence
+      MutexValues::pandaPacket.sequence++;
+
+      // get the current time
+      MutexValues::pandaPacket.sampleTime = pdTICKS_TO_MS( xTaskGetTickCount() );
+
+
+      // if auto state, recieve telemetry, check packet.state to figure out
       if (!strcmp(MutexValues::pandaPacket.state, "AUTO")) {
         ethernet.receiveTelemetry();
       }
+
+      // get the command age
+      MutexValues::pandaPacket.commandAge = pdTICKS_TO_MS( xTaskGetTickCount() );
+
+      MutexValues::pandaPacket.format();
+
+      // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);
     }
+
     // set recieved values to MutexValues::commands
     if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(15)) == pdTRUE) {
       MutexValues::commands.erpm = MutexValues::pandaPacket.rpm;
