@@ -18,6 +18,7 @@
 #include <EVT_Ethernet.hpp>
 
 #include "timers.h"
+#include "EthernetPacket.hpp"
 
 namespace RTOS {
   /**
@@ -146,7 +147,7 @@ namespace RTOS {
    */
   struct MutexValues {
     static transmitter_t transmitterValues;
-    static telemetry_t pandaPacket;
+    static Networking::TelemetryPayload telemetry;
     static command_t commands;
 
     static bool ledState;
@@ -161,7 +162,7 @@ namespace RTOS {
 
   // Structs for value packets
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
-  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet
+  Networking::TelemetryPayload MutexValues::telemetry;         ///< Values to send to the Panda packet
   command_t MutexValues::commands;              ///< Values for the autonomous commands
 
   // Other mutex values
