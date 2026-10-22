@@ -21,6 +21,7 @@
 using namespace Constants;
 
 #include "Mutexes.hpp"
+#include "EthernetPacket.hpp"
 using RTOS::Mutexes;
 using RTOS::MutexValues;
 

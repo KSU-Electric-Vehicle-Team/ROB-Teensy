@@ -1,6 +1,7 @@
 #include <EVT_Ethernet.hpp>
 
 #include "Mutexes.hpp"
+#include "EthernetPacket.hpp"
 using RTOS::MutexValues;
 using RTOS::Mutexes;
 
