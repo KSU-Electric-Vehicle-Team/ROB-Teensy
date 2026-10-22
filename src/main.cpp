@@ -28,6 +28,15 @@ void setup() {
     NULL
   );
 
+  xTaskCreate( // Create a task to command the VESC and read its telemetry over UART
+    vescTask,
+    "VESC UART Updates",
+    1024,
+    NULL,
+    3,
+    NULL
+  );
+
   xTaskCreate( // Create a task to handle the state machine
     stateMachineTask,
     "State Machine Task",

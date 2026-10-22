@@ -22,7 +22,7 @@ namespace Constants {
   struct IOConstants {
     static constexpr HardwareSerial & sBusSerial = Serial7;   // UART used for the RC receiver
     static constexpr HardwareSerial & oDriveSerial = Serial6; // UART used for the ODrive
-    static constexpr HardwareSerial & vescSerial = Serial2;   // UART used for the VESC
+    static constexpr HardwareSerialIMXRT & vescSerial = Serial2; // UART used for the VESC (IMXRT type allows extra RX memory)
     
     static const size_t oDriveBaudrate = 115'200;
     static const size_t vescBaudrate = 115'200;
@@ -30,6 +30,7 @@ namespace Constants {
     static constexpr double updateFrequency = 80.0;
     static constexpr double ledBlinkFrequency = 1.0;
     static constexpr double telemetryFrequency = 8.0;
+    static constexpr double vescTelemetryFrequency = 10.0;
 
     static constexpr uint16_t driveEncoderPulsesPerRev = 600;
     
@@ -54,6 +55,7 @@ namespace Constants {
     
     static const bool telemetryToSerial = false;
     static const bool motorDataToSerial = false;
+    static const bool vescBenchTest = false; // Take VESC ERPM and brake commands from the Serial monitor instead of the command mutex
   };
 }
 
