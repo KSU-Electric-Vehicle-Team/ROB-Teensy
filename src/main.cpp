@@ -28,10 +28,28 @@ void setup() {
     NULL
   );
 
+  xTaskCreate( // Create a task to command the VESC and read its telemetry over UART
+    vescTask,
+    "VESC UART Updates",
+    1024,
+    NULL,
+    3,
+    NULL
+  );
+
   xTaskCreate( // Create a task to handle the state machine
     stateMachineTask,
     "State Machine Task",
     256,
+    NULL,
+    4,
+    NULL
+  );
+
+  xTaskCreate( // Create a task to handle the ethernet communication
+    ethernetTask,
+    "Ethernet Task",
+    512, // snprintf with floats in telemetry_t::format() overflows a 128 word stack
     NULL,
     4,
     NULL
