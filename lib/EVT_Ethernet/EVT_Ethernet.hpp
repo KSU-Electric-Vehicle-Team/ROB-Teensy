@@ -25,8 +25,8 @@ namespace Signals {
     private:
       EthernetUDP udp;            // UDP socket used for communications
 
-      IPAddress & teensyIP;       // IPAddress reference for the Teensy 4.1
-      IPAddress & pandaIP;        // IPAddress reference for the Latte Panda Sigma
+      IPAddress teensyIP;         // IP address of the Teensy 4.1 (copied, the constructor parameter doesn't outlive the constructor)
+      IPAddress pandaIP;          // IP address of the Latte Panda Sigma
 
       byte (&teensyMac)[6];       // Mac address for the Teensy 4.1
 

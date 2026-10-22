@@ -40,7 +40,7 @@ void setup() {
   xTaskCreate( // Create a task to handle the ethernet communication
     ethernetTask,
     "Ethernet Task",
-    128,
+    512, // snprintf with floats in telemetry_t::format() overflows a 128 word stack
     NULL,
     4,
     NULL

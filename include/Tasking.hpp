@@ -122,6 +122,9 @@ static void ethernetTask(void * pvParameters) {
       MutexValues::commands.steering = MutexValues::pandaPacket.oDriveTarget;
       xSemaphoreGive(Mutexes::commandMutex);
     }
+
+    // Block between iterations so lower priority tasks can run
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
   }
 }
 
@@ -185,6 +188,9 @@ static void stateMachineTask(void * pvParameters) {
     }
 
     stateMachine.runState();
+
+    // Block between iterations so lower priority tasks can run
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 
   vTaskDelete(nullptr);

@@ -61,7 +61,7 @@ namespace RTOS {
       snprintf(
         this->buffer,
         sizeof(this->buffer),
-        "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld",
+        "%d,%u,%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld,%u,%d",
         this->sequence,
         this->sampleTime,
         this->state,
