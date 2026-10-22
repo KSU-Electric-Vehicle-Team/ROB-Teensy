@@ -5,7 +5,7 @@
 using RTOS::MutexValues;
 using RTOS::Mutexes;
 
-namespace Signals {
+namespace Networking {
   EthernetEVT::EthernetEVT(IPAddress ipTeensy, IPAddress ipPanda, byte (&mac)[6]) : teensyIP(ipTeensy), pandaIP(ipPanda), teensyMac(mac) {}
 
 

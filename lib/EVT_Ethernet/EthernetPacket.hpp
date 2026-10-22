@@ -6,7 +6,7 @@
 #include <cstddef>  // offsetof, for the alignment checks at the bottom
 #include <cstdint>  // exact-size ints (uint8_t, uint32_t...) so both sides agree on sizes
 
-namespace Signals {  // everything lives in rob:: so names don't clash with the rest of the firmware
+namespace Networking {  // everything lives in rob:: so names don't clash with the rest of the firmware
 
 constexpr uint16_t kMagic = 0x4252;  // "RB", first 2 bytes of every packet so we can spot ours
 constexpr uint8_t kVersion = 1;      // bump on ANY layout change
@@ -19,7 +19,7 @@ enum class MsgType : uint8_t {
   COMMAND = 4,    // pc -> teensy
 };
 
-// firmware state machine state, same numbers as Signals::States
+// firmware state machine state, same numbers as Networking::States
 // append only, never renumber
 enum class VehicleState : uint8_t {
   NONE = 0, IDLE = 1, RC = 2, AUTO = 3, ERROR = 4, STOP = 5, RESET = 6

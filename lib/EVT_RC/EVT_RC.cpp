@@ -1,6 +1,6 @@
 #include <EVT_RC.hpp>
 
-namespace Signals {
+namespace Networking {
   ControlRC::ControlRC() {
     for (int i = 0; i < TransmitterConstants::numChannels; i++) {
       channelVal[i] = TransmitterConstants::midRC;
@@ -15,7 +15,7 @@ namespace Signals {
       case (mapType::JOYSTICK):
         joystickMap[0] = mapArray[0];
         joystickMap[1] = mapArray[1];
-        
+
         break;
       case (mapType::SWITCH):
         switchMap[0] = mapArray[0];
@@ -58,7 +58,7 @@ namespace Signals {
     }
 
     return hasValidFrame && ((millis() - lastValidFrame) <= validFrameTimeout);
-  } 
+  }
 
 
   void ControlRC::printChannel(ChannelRC channel, bool isMapped) {
@@ -83,10 +83,10 @@ namespace Signals {
         case (ChannelRC::RIGHT_Y):
         case (ChannelRC::LEFT_Y):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            joystickMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            joystickMap[0],
             joystickMap[1]
           );
         case (ChannelRC::SWA):
@@ -94,10 +94,10 @@ namespace Signals {
         case (ChannelRC::SWF):
         case (ChannelRC::SWH):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            switchMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            switchMap[0],
             switchMap[1]
           );
         case (ChannelRC::SWB):
@@ -116,17 +116,17 @@ namespace Signals {
         case (ChannelRC::VRC):
         case (ChannelRC::VRD):
           return map(
-            channelVal[channel], 
-            TransmitterConstants::minRC, 
-            TransmitterConstants::maxRC, 
-            knobMap[0], 
+            channelVal[channel],
+            TransmitterConstants::minRC,
+            TransmitterConstants::maxRC,
+            knobMap[0],
             knobMap[1]
           );
         default:
           return channelVal[channel];
       }
-    } 
-    
+    }
+
     return channelVal[channel];
   }
 

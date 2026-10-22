@@ -17,7 +17,7 @@
 #include <NativeEthernet.h>
 #include <string>
 
-namespace Signals {
+namespace Networking {
   /**
    * @brief Class used for communications of UDP packets
    */
