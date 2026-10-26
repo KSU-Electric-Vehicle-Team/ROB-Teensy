@@ -31,11 +31,11 @@ namespace Networking {
   void EthernetEVT::receiveCommand() {
     int size;
     while ((size = udp.parsePacket()) > 0) {
-      uint8_t buf[64];
-      int len = udp.read(buf, sizeof(buf));
+      uint8_t packetBuffer[64];
+      int len = udp.read(packetBuffer, sizeof(packetBuffer));
 
       Networking::Packet<Networking::CommandPayload> cmd;
-      auto reject = checkCommand(buf, len, MutexValues::telemetry.state,
+      auto reject = checkCommand(packetBuffer, len, MutexValues::telemetry.state,
                               MutexValues::telemetry.last_cmd_boot_id,
                               MutexValues::telemetry.last_cmd_sequence, cmd);  // match the real signature in CheckCommand.hpp
 
