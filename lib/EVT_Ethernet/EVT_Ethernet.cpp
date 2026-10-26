@@ -16,8 +16,6 @@ namespace Networking {
 
     // fill in info
     MutexValues::info.encoder_counts_per_rev = 2400;
-    MutexValues::info.motor_pole_pairs = 0;
-    MutexValues::info.steering_calibration_id = 0;
 
     return (Ethernet.hardwareStatus() != EthernetNoHardware) && (Ethernet.linkStatus() == LinkON);
   }
