@@ -153,6 +153,7 @@ namespace RTOS {
     static Networking::HealthPayload health;
     static command_t commands;
 
+    static uint32_t sequence;
     static uint32_t bootId;
     static bool ledState;
   };
@@ -174,6 +175,7 @@ namespace RTOS {
 
   // Other mutex values
   uint32_t MutexValues::bootId;
+  uint32_t MutexValues::sequence = 0;
   bool MutexValues::ledState = false;
 }
 

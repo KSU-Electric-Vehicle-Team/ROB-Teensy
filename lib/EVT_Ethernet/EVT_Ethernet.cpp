@@ -31,6 +31,8 @@ namespace Networking {
         len
       );
       udp.endPacket();
+
+      MutexValues::sequence++;
   }
 
 
