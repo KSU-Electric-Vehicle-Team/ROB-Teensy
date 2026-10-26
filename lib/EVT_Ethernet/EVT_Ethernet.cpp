@@ -14,6 +14,13 @@ namespace Networking {
     Ethernet.begin(teensyMac, teensyIP);
     udp.begin(teensyPort);
 
+    if (xSemaphoreTake(Mutexes::infoMutex, pdMS_TO_TICKS(5) == pdTRUE)) {
+      MutexValues::info.encoder_counts_per_rev = 2400;
+      MutexValues::info.motor_pole_pairs = 0;
+      MutexValues::info.steering_calibration_id = 0;
+      xSemaphoreGive(Mutexes::infoMutex);
+    }
+
     return (Ethernet.hardwareStatus() != EthernetNoHardware) && (Ethernet.linkStatus() == LinkON);
   }
 
