@@ -58,7 +58,7 @@ namespace Networking {
        *
        * @param buff Ethernet message buffer to send
        */
-      void sendTelemetry(const char * buff);
+      void sendPacket(const uint8_t * data, size_t len);
 
 
       /**

@@ -25,11 +25,11 @@ namespace Networking {
   }
 
 
-  void EthernetEVT::sendTelemetry(const char * buff) {
+  void EthernetEVT::sendPacket(const uint8_t * data, size_t len) {
       udp.beginPacket(pandaIP, pandaPort);
       udp.write(
-        reinterpret_cast<const uint8_t *>(buff),
-        strlen(buff)
+        reinterpret_cast<const uint8_t *>(data),
+        len
       );
       udp.endPacket();
   }
