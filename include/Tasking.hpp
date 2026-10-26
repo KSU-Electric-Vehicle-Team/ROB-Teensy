@@ -95,7 +95,7 @@ static void ethernetTask(void * pvParameters) {
       // ethernet.sendTelemetry(buildPacket()); # Add the required parameters later
 
       // if auto state, recieve telemetry, check packet.state to figure out
-      ethernet.receiveTelemetry();
+      ethernet.receiveCommand();
 
       // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);

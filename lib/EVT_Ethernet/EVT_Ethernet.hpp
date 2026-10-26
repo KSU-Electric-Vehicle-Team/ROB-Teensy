@@ -62,9 +62,9 @@ namespace Networking {
 
 
       /**
-       * @brief Receives and parses the formatted telemetry packet from the Latte Panda Sigma
+       * @brief Receives and parses the formatted command packet from the Latte Panda Sigma
        */
-      void receiveTelemetry();
+      void receiveCommand();
   };
 }
 

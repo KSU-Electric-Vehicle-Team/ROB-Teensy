@@ -28,7 +28,7 @@ namespace Networking {
   }
 
 
-  void EthernetEVT::receiveTelemetry() {
+  void EthernetEVT::receiveCommand() {
     int size;
     while ((size = udp.parsePacket()) > 0) {
       uint8_t buf[64];
