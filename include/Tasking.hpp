@@ -163,8 +163,7 @@ static void stateMachineTask(void * pvParameters) {
 
   while (true) {
     if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
-      // Copy the state as a string to the Panda telemetry
-      // strcpy(MutexValues::telemetry.state, stateMachine.toString(stateMachine.getState()));
+      MutexValues::telemetry.state = static_cast<Networking::VehicleState>(stateMachine.getState());
 
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex
     }
