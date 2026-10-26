@@ -46,10 +46,9 @@ namespace Networking {
                               MutexValues::telemetry.last_cmd_sequence, cmd);  // match the real signature in CheckCommand.hpp
 
       if (reject == RejectReason::NONE) {
-        stamp(MutexValues::telemetry.last_cmd);
-
         // Update command values
         if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(5)) == pdTRUE) {
+          stamp(MutexValues::telemetry.last_cmd);
           MutexValues::commands.brake = cmd.payload.brake_command;
           MutexValues::commands.erpm = cmd.payload.motor_setpoint;
           MutexValues::commands.steering = cmd.payload.steering_target_rad;
