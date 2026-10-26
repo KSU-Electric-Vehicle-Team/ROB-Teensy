@@ -22,6 +22,7 @@ using namespace Constants;
 
 #include "Mutexes.hpp"
 #include "EthernetPacket.hpp"
+#include "PacketIO.hpp"
 using RTOS::Mutexes;
 using RTOS::MutexValues;
 
@@ -90,28 +91,11 @@ static void ethernetTask(void * pvParameters) {
   while (true) {
     // Format telemetry packet.format()
     if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
-      // send telemetry (MutexValues::pandaPacket.buffer)
-      ethernet.sendTelemetry(MutexValues::pandaPacket.buffer);
-
-      // set the previous command sequence
-      MutexValues::pandaPacket.lastCommandSequence = MutexValues::pandaPacket.sequence;
-
-      // set current sequence
-      MutexValues::pandaPacket.sequence++;
-
-      // get the current time
-      MutexValues::pandaPacket.sampleTime = pdTICKS_TO_MS( xTaskGetTickCount() );
-
+      // send telemetry (MutexValues::telemetry.buffer)
+      // ethernet.sendTelemetry(buildPacket()); # Add the required parameters later
 
       // if auto state, recieve telemetry, check packet.state to figure out
-      if (!strcmp(MutexValues::pandaPacket.state, "AUTO")) {
-        ethernet.receiveTelemetry();
-      }
-
-      // get the command age
-      MutexValues::pandaPacket.commandAge = pdTICKS_TO_MS( xTaskGetTickCount() );
-
-      MutexValues::pandaPacket.format();
+      ethernet.receiveTelemetry();
 
       // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);
@@ -119,8 +103,8 @@ static void ethernetTask(void * pvParameters) {
 
     // set recieved values to MutexValues::commands
     if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(15)) == pdTRUE) {
-      MutexValues::commands.erpm = MutexValues::pandaPacket.rpm;
-      MutexValues::commands.steering = MutexValues::pandaPacket.oDriveTarget;
+      // MutexValues::commands.erpm = MutexValues::telemetry.rpm;
+      // MutexValues::commands.steering = MutexValues::telemetry.oDriveTarget;
       xSemaphoreGive(Mutexes::commandMutex);
     }
   }
@@ -180,7 +164,7 @@ static void stateMachineTask(void * pvParameters) {
   while (true) {
     if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
       // Copy the state as a string to the Panda telemetry
-      strcpy(MutexValues::pandaPacket.state, stateMachine.toString(stateMachine.getState()));
+      // strcpy(MutexValues::telemetry.state, stateMachine.toString(stateMachine.getState()));
 
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex
     }
