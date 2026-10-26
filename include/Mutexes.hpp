@@ -26,7 +26,6 @@ namespace RTOS {
    */
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
-    static SemaphoreHandle_t infoMutex;
     static SemaphoreHandle_t healthMutex;
     static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t rcMutex;
@@ -159,7 +158,6 @@ namespace RTOS {
 
 
   SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex(); ///< Mutex for Ethernet telemetry values
-  SemaphoreHandle_t Mutexes::infoMutex = xSemaphoreCreateMutex();      ///< Mutex for Ethernet info values
   SemaphoreHandle_t Mutexes::healthMutex = xSemaphoreCreateMutex();    ///< Mutex for Ethernet health values
   SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();   ///< Mutex for motor commands
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();        ///< Mutex for RC values
