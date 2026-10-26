@@ -14,6 +14,9 @@ namespace Networking {
     Ethernet.begin(teensyMac, teensyIP);
     udp.begin(teensyPort);
 
+    Entropy.Initialize();
+    MutexValues::bootId = Entropy.random();
+
     // fill in info
     MutexValues::info.encoder_counts_per_rev = 2400;
 
