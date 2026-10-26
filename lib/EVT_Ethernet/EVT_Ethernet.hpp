@@ -30,7 +30,7 @@ namespace Networking {
 
       byte (&teensyMac)[6];       // Mac address for the Teensy 4.1
 
-      char packetBuffer[128];     // UDP packet buffer
+      uint32_t packetBuffer[64];     // UDP packet buffer
 
       uint16_t receivedLength;    // Length of the received packet
 
