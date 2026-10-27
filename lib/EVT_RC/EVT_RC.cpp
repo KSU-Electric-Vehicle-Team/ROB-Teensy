@@ -1,6 +1,6 @@
 #include <EVT_RC.hpp>
 
-namespace Networking {
+namespace Signals {
   ControlRC::ControlRC() {
     for (int i = 0; i < TransmitterConstants::numChannels; i++) {
       channelVal[i] = TransmitterConstants::midRC;

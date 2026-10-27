@@ -27,7 +27,7 @@ using namespace Constants;
 #include "Queues.hpp"
 using RTOS::Queues;
 
-namespace Networking {
+namespace Signals {
   /**
    * @brief Enum used for selection of RC channel values
    */

@@ -25,7 +25,7 @@ using RTOS::Queues;
 /**
  * @brief Namespace used for commuinications drivers
  */
-namespace Networking {
+namespace Signals {
   /**
    * @brief Enum used to denote the current state of the system
    */

@@ -61,7 +61,7 @@ static void printTask(void * pvParameters) {
  * @brief Task used to update the RC values from the SBUS
  */
 static void rcTask(void * pvParameters) {
-  Networking::ControlRC transmitter;
+  Signals::ControlRC transmitter;
 
   while (true) {
     if (transmitter.update()) {
@@ -124,49 +124,49 @@ static void ethernetTask(void * pvParameters) {
  * @brief Task used to update and run the state machine
  */
 static void stateMachineTask(void * pvParameters) {
-  Networking::StateMachine stateMachine;
+  Signals::StateMachine stateMachine;
 
-  stateMachine.defineState(Networking::States::NONE, [&] () { // Define NONE state
+  stateMachine.defineState(Signals::States::NONE, [&] () { // Define NONE state
     // Run any pre-IDLE code
 
     // Move on to IDLE state
-    stateMachine.setState(Networking::States::IDLE);
+    stateMachine.setState(Signals::States::IDLE);
   });
 
-  stateMachine.defineState(Networking::States::IDLE, [&] () { // Define IDLE state
+  stateMachine.defineState(Signals::States::IDLE, [&] () { // Define IDLE state
     // Run any IDLE code
 
     // Move on to RC state
-    stateMachine.setState(Networking::States::RC);
+    stateMachine.setState(Signals::States::RC);
   });
 
-  stateMachine.defineState(Networking::States::RC, [&] () { // Define RC state
-
-  });
-
-  stateMachine.defineState(Networking::States::AUTO, [&] () { // Define AUTO state
+  stateMachine.defineState(Signals::States::RC, [&] () { // Define RC state
 
   });
 
-  stateMachine.defineState(Networking::States::ERROR, [&] () { // Define ERROR state
+  stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state
+
+  });
+
+  stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state
     // Determine if the car is in need of an urgent stop or an E-Stop
 
     // Move on to STOP state if the car doesn't have to cut power
-    stateMachine.setState(Networking::States::STOP);
+    stateMachine.setState(Signals::States::STOP);
   });
 
-  stateMachine.defineState(Networking::States::STOP, [&] () { // Define STOP state
+  stateMachine.defineState(Signals::States::STOP, [&] () { // Define STOP state
     // Perform an urgent stop and then record the error that occured
 
     // Move on to RESET state to recalibrate the motors
-    stateMachine.setState(Networking::States::RESET);
+    stateMachine.setState(Signals::States::RESET);
   });
 
-  stateMachine.defineState(Networking::States::RESET, [&] () { // Define RESET state
+  stateMachine.defineState(Signals::States::RESET, [&] () { // Define RESET state
     // Clear error codes from the ODrive and VESC
 
     // Move on to IDLE state to return control to the car
-    stateMachine.setState(Networking::States::IDLE);
+    stateMachine.setState(Signals::States::IDLE);
   });
 
 

@@ -1,6 +1,6 @@
 #include <EVT_StateMachine.hpp>
 
-namespace Networking {
+namespace Signals {
   StateMachine::StateMachine(States initstate) {
     currentState = initstate;
     setStateDefaults();

@@ -119,26 +119,26 @@ namespace RTOS {
      *
      * @param transmitter ControlRC instance to use to update the values
      */
-    void update(Networking::ControlRC * transmitter) {
-      leftJoystick.x = transmitter->getChannelValue(Networking::ChannelRC::LEFT_X, false);
-      leftJoystick.y = transmitter->getChannelValue(Networking::ChannelRC::LEFT_Y, false);
+    void update(Signals::ControlRC * transmitter) {
+      leftJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::LEFT_X, false);
+      leftJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::LEFT_Y, false);
 
-      rightJoystick.x = transmitter->getChannelValue(Networking::ChannelRC::RIGHT_X, false);
-      rightJoystick.y = transmitter->getChannelValue(Networking::ChannelRC::RIGHT_Y, false);
+      rightJoystick.x = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_X, false);
+      rightJoystick.y = transmitter->getChannelValue(Signals::ChannelRC::RIGHT_Y, false);
 
-      swa = transmitter->getChannelValue(Networking::ChannelRC::SWA, false);
-      swb = transmitter->getChannelValue(Networking::ChannelRC::SWB, false);
-      swc = transmitter->getChannelValue(Networking::ChannelRC::SWC, false);
-      swd = transmitter->getChannelValue(Networking::ChannelRC::SWD, false);
-      swe = transmitter->getChannelValue(Networking::ChannelRC::SWE, false);
-      swf = transmitter->getChannelValue(Networking::ChannelRC::SWF, false);
-      swg = transmitter->getChannelValue(Networking::ChannelRC::SWG, false);
-      swh = transmitter->getChannelValue(Networking::ChannelRC::SWH, false);
+      swa = transmitter->getChannelValue(Signals::ChannelRC::SWA, false);
+      swb = transmitter->getChannelValue(Signals::ChannelRC::SWB, false);
+      swc = transmitter->getChannelValue(Signals::ChannelRC::SWC, false);
+      swd = transmitter->getChannelValue(Signals::ChannelRC::SWD, false);
+      swe = transmitter->getChannelValue(Signals::ChannelRC::SWE, false);
+      swf = transmitter->getChannelValue(Signals::ChannelRC::SWF, false);
+      swg = transmitter->getChannelValue(Signals::ChannelRC::SWG, false);
+      swh = transmitter->getChannelValue(Signals::ChannelRC::SWH, false);
 
-      vra = transmitter->getChannelValue(Networking::ChannelRC::VRA, false);
-      vra = transmitter->getChannelValue(Networking::ChannelRC::VRB, false);
-      vra = transmitter->getChannelValue(Networking::ChannelRC::VRC, false);
-      vra = transmitter->getChannelValue(Networking::ChannelRC::VRD, false);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRA, false);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRB, false);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRC, false);
+      vra = transmitter->getChannelValue(Signals::ChannelRC::VRD, false);
     }
   } transmitter_t;
 
