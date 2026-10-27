@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CHECKCOMMAND
+#define CHECKCOMMAND
+
 #include <cmath>         // std::isfinite
 #include "PacketIO.hpp"  // crc32 + the structs
 
@@ -43,3 +45,5 @@ inline Networking::RejectReason checkCommand(const uint8_t * buf, int len, Netwo
   if (state != Networking::VehicleState::AUTO) return RejectReason::WRONG_STATE;
   return RejectReason::NONE;  // passed everything
 }
+
+# endif // CHECKCOMMAND

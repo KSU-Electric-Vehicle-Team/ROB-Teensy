@@ -1,4 +1,6 @@
-#pragma once                   // only include this file once per build
+#ifndef PACKETIO
+#define PACKETIO
+
 #include "arduino_freertos.h"  // micros(), taskENTER_CRITICAL, Serial
 #include <Entropy.h>           // teensy hardware random numbers, for boot_id
 #include <cstring>             // memcpy
@@ -62,3 +64,5 @@ size_t buildPacket(Networking::MsgType type, const Payload & payload, uint32_t b
   memcpy(out + sizeof(pkt) - sizeof(uint32_t), &crc, sizeof(crc));  // write the crc into those last 4 bytes
   return sizeof(pkt);                        // total bytes to send
 }
+
+#endif // PACKETIO

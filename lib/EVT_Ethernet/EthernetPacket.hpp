@@ -1,8 +1,9 @@
+#ifndef ETHERNETPACKET
+#define ETHERNETPACKET
+
 // ROB host <-> Teensy packets, v1 (proposal)
 // little-endian, packed, every packet = PacketHeader + payload + crc32
 // serialize with memcpy, don't cast received buffers to these structs
-
-#pragma once      // only include this file once per build
 #include <cstddef>  // offsetof, for the alignment checks at the bottom
 #include <cstdint>  // exact-size ints (uint8_t, uint32_t...) so both sides agree on sizes
 
@@ -186,3 +187,5 @@ static_assert(offsetof(Packet<TelemetryPayload>, payload.rc) % 8 == 0);
 static_assert(offsetof(Packet<HealthPayload>, payload.odrive) % 8 == 0);
 
 }  // namespace Networking
+
+#endif // ETHERNETPACKET
