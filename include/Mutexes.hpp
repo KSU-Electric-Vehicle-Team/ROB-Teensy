@@ -26,7 +26,6 @@ namespace RTOS {
    */
   struct Mutexes {
     static SemaphoreHandle_t telemetryMutex;
-    static SemaphoreHandle_t healthMutex;
     static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t rcMutex;
 
@@ -149,18 +148,13 @@ namespace RTOS {
   struct MutexValues {
     static transmitter_t transmitterValues;
     static Networking::TelemetryPayload telemetry;
-    static Networking::InfoPayload info;
-    static Networking::HealthPayload health;
     static command_t commands;
 
-    static uint32_t sequence;
-    static uint32_t bootId;
     static bool ledState;
   };
 
 
   SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex(); ///< Mutex for Ethernet telemetry values
-  SemaphoreHandle_t Mutexes::healthMutex = xSemaphoreCreateMutex();    ///< Mutex for Ethernet health values
   SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();   ///< Mutex for motor commands
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();        ///< Mutex for RC values
 
@@ -169,13 +163,9 @@ namespace RTOS {
   // Structs for value packets
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
   Networking::TelemetryPayload MutexValues::telemetry;         ///< Values to send to the Panda packet
-  Networking::InfoPayload MutexValues::info;
-  Networking::HealthPayload MutexValues::health;
   command_t MutexValues::commands;              ///< Values for the autonomous commands
 
   // Other mutex values
-  uint32_t MutexValues::bootId;
-  uint32_t MutexValues::sequence = 0;
   bool MutexValues::ledState = false;
 }
 

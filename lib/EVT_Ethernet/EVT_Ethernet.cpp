@@ -14,11 +14,16 @@ namespace Networking {
     Ethernet.begin(teensyMac, teensyIP);
     udp.begin(teensyPort);
 
-    Entropy.Initialize();
-    MutexValues::bootId = Entropy.random();
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
 
-    // fill in info
-    MutexValues::info.encoder_counts_per_rev = 2400;
+      Entropy.Initialize();
+      MutexValues::telemetry.bootId = Entropy.random(); // Set the boot id to something random
+
+      // fill in info
+      MutexValues::telemetry.encoder_counts_per_rev = 2400;
+
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
 
     return (Ethernet.hardwareStatus() != EthernetNoHardware) && (Ethernet.linkStatus() == LinkON);
   }
@@ -32,7 +37,7 @@ namespace Networking {
       );
       udp.endPacket();
 
-      MutexValues::sequence++;
+      MutexValues::telemetry.sequence++;
   }
 
 
