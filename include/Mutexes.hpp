@@ -15,8 +15,10 @@
 
 #include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
+#include <EVT_Ethernet.hpp>
 
 #include "timers.h"
+#include "EthernetPacket.hpp"
 
 namespace RTOS {
   /**
@@ -35,18 +37,23 @@ namespace RTOS {
    * @brief Struct used to format Ethernet packets
    */
   typedef struct {
-    char buffer[128];       ///< Message buffer for the Ethernet connection
-    char state[8];          ///< Current state as a string
+    char buffer[128];         ///< Message buffer for the Ethernet connection
+    char state[8];            ///< Current state as a string
 
-    int32_t encoderCount;   ///< Encoder tick count since boot
+    int32_t encoderCount;     ///< Encoder tick count since boot
 
-    float driveRevolutions; ///< Number of turns of the drive motor
-    float steeringAngle;    ///< Current steering angle
-    float oDriveTarget;     ///< ODrive target angle
-    float rpm;              ///< Drive motor RPM target
+    int sequence;             ///< Packet sequence
+    int lastCommandSequence;  ///< Packet sequence
+    size_t sampleTime;        ///< Current time in miliseconds
+    size_t commandAge;        ///< Packet age in miliseconds
 
-    uint16_t throttle;      ///< RC throttle input
-    uint16_t steering;      ///< RC steering input
+    float driveRevolutions;   ///< Number of turns of the drive motor
+    float steeringAngle;      ///< Current steering angle
+    float oDriveTarget;       ///< ODrive target angle
+    float rpm;                ///< Drive motor RPM target
+
+    uint16_t throttle;        ///< RC throttle input
+    uint16_t steering;        ///< RC steering input
 
     /**
      * @brief Function used to format the buffer field of the packet_t struct
@@ -56,6 +63,8 @@ namespace RTOS {
         this->buffer,
         sizeof(this->buffer),
         "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld",
+        this->sequence,
+        this->sampleTime,
         this->state,
         this->rpm,
         this->steeringAngle,
@@ -63,7 +72,9 @@ namespace RTOS {
         this->throttle,
         this->steering,
         this->driveRevolutions,
-        this->encoderCount
+        this->encoderCount,
+        this->commandAge,
+        this->lastCommandSequence
       );
     }
   } telemetry_t;
@@ -136,7 +147,7 @@ namespace RTOS {
    */
   struct MutexValues {
     static transmitter_t transmitterValues;
-    static telemetry_t pandaPacket;
+    static Networking::TelemetryPayload telemetry;
     static command_t commands;
 
     static bool ledState;
@@ -151,7 +162,7 @@ namespace RTOS {
 
   // Structs for value packets
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
-  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet
+  Networking::TelemetryPayload MutexValues::telemetry;         ///< Values to send to the Panda packet
   command_t MutexValues::commands;              ///< Values for the autonomous commands
 
   // Other mutex values

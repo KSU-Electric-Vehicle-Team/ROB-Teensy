@@ -21,6 +21,8 @@
 using namespace Constants;
 
 #include "Mutexes.hpp"
+#include "EthernetPacket.hpp"
+#include "PacketIO.hpp"
 using RTOS::Mutexes;
 using RTOS::MutexValues;
 
@@ -76,6 +78,48 @@ static void rcTask(void * pvParameters) {
 }
 
 
+static void ethernetTask(void * pvParameters) {
+  // Make ethernet object
+  IPAddress teensyIP {192, 168, 0, 177};
+  IPAddress panda {169, 254, 1, 10};
+  byte teensy[6] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+
+  Networking::EthernetEVT ethernet {teensyIP, panda, teensy};
+  // Setup ethernet
+  ethernet.setup();
+
+  while (true) {
+    // Format telemetry packet.format()
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+
+
+      // send telemetry
+      // ethernet.sendPacket(buildPacket(Networking::MsgType::TELEMETRY,
+      //                               MutexValues::telemetry,
+      //                               MutexValues::bootId,
+      //                               MutexValues::sequence,
+      //                               micros64(),
+      //                               (uint8_t) sizeof(Networking::Packet<Networking::TelemetryPayload>)
+      //                               ),
+      //                     (uint8_t) sizeof(Networking::Packet<Networking::TelemetryPayload>));
+
+      // if auto state, recieve telemetry, check packet.state to figure out
+      ethernet.receiveCommand();
+
+      // Give mutex back
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
+
+    // set recieved values to MutexValues::commands
+    if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(15)) == pdTRUE) {
+      // MutexValues::commands.erpm = MutexValues::telemetry.rpm;
+      // MutexValues::commands.steering = MutexValues::telemetry.oDriveTarget;
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
+  }
+}
+
+
 /**
  * @brief Task used to update and run the state machine
  */
@@ -101,6 +145,7 @@ static void stateMachineTask(void * pvParameters) {
   });
 
   stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state
+
   });
 
   stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state
@@ -127,8 +172,7 @@ static void stateMachineTask(void * pvParameters) {
 
   while (true) {
     if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
-      // Copy the state as a string to the Panda telemetry
-      strcpy(MutexValues::pandaPacket.state, stateMachine.toString(stateMachine.getState()));
+      MutexValues::telemetry.state = static_cast<Networking::VehicleState>(stateMachine.getState());
 
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex
     }
