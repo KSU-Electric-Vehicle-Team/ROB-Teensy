@@ -128,22 +128,28 @@ struct __attribute__((packed)) TelemetryPayload {
   float vesc_input_current_a;  // voltage x current = power
   float vesc_temp_c;           // controller temp
   float motor_temp_c;          // motor temp
-  // uint32_t reserved0;          // padding, send 0
+  uint32_t reserved2;          // padding, send 0
 
+
+  // Previously healthPayload
   Stamp odrive;                // when odrive_error was read
   uint32_t odrive_error;       // raw odrive error bits
 
   uint32_t tx_count;           // packets the teensy has sent since boot
   uint32_t rx_ok_count;        // commands accepted since boot
   uint32_t rx_reject_count;    // commands rejected since boot
-  // uint32_t reserved1;          // padding, send 0
+  uint8_t reserved3;          // padding, send 0
 
+
+  // Previously infoPayload
   uint8_t firmware_git_sha[20];      // which firmware build is flashed, zeros until we wire it up
   uint32_t steering_calibration_id;  // which steering calibration made steering_angle_rad
   uint32_t encoder_counts_per_rev;   // 2400
   uint16_t motor_pole_pairs;         // for eRPM -> RPM, 0 until we know it
-  // uint16_t reserved;                 // padding, send 0
+  uint8_t reserved4;                 // padding, send 0
 
+
+  // Previously by themselves
   uint32_t sequence;
   uint32_t bootId;
 };
@@ -171,17 +177,17 @@ struct __attribute__((packed)) Packet {
 // build fails if a size is wrong. if one fails, someone changed the layout
 static_assert(sizeof(PacketHeader) == 24);
 static_assert(sizeof(Stamp) == 12);
-static_assert(sizeof(TelemetryPayload) == 230);
+static_assert(sizeof(TelemetryPayload) == 236);
 // static_assert(sizeof(HealthPayload) == 64);
 // static_assert(sizeof(InfoPayload) == 32);
 static_assert(sizeof(CommandPayload) == 20);
-static_assert(sizeof(Packet<TelemetryPayload>) == 258);
+static_assert(sizeof(Packet<TelemetryPayload>) == 264);
 
 // uint64s stay 8-byte aligned in the packet
 static_assert(offsetof(Packet<TelemetryPayload>, payload.last_cmd) % 8 == 0);
 static_assert(offsetof(Packet<TelemetryPayload>, payload.encoder) % 8 == 0);
 static_assert(offsetof(Packet<TelemetryPayload>, payload.rc) % 8 == 0);
-// static_assert(offsetof(Packet<HealthPayload>, payload.odrive) % 8 == 0);
+static_assert(offsetof(Packet<TelemetryPayload>, payload.odrive) % 8 == 0);
 
 }  // namespace Networking
 
