@@ -77,6 +77,134 @@ static void rcTask(void * pvParameters) {
 
 
 /**
+ * @brief Reads VESC bench test commands from the Serial monitor
+ *
+ * @note Commands are sent one per line: "e <erpm>" sets the ERPM, "b <amps>" sets the
+ *       brake current, and "s" sends zero current so the motor coasts
+ *
+ * @param erpm ERPM target to update
+ * @param brake Brake current target to update
+ */
+static void readBenchCommand(float & erpm, float & brake) {
+  static char line[32];      // Serial command buffer
+  static uint8_t length = 0; // Number of characters in the command buffer
+
+  while (Serial.available() > 0) {
+    const char c = Serial.read();
+
+    if (c != '\n' && c != '\r') {
+      if (length < sizeof(line) - 1) {
+        line[length++] = c;
+      }
+
+      continue;
+    }
+
+    line[length] = '\0';
+    length = 0;
+
+    // Skip the command letters to find the value (accepts "e 3000", "e3000", or "erpm 3000")
+    const char * value = line;
+    while (isalpha(static_cast<unsigned char>(*value))) {
+      value++;
+    }
+
+    switch (tolower(static_cast<unsigned char>(line[0]))) {
+      case 'e':
+        erpm = atoff(value);
+        brake = 0.0f;
+        break;
+      case 'b':
+        brake = atoff(value);
+        erpm = 0.0f;
+        break;
+      case 's':
+        erpm = 0.0f;
+        brake = 0.0f;
+        break;
+      case '\0':
+        break;
+      default:
+        Queues::logWrite("VESC bench commands: e <erpm>, b <amps>, s");
+        break;
+    }
+  }
+}
+
+
+/**
+ * @brief Task used to command the VESC and read its telemetry over UART
+ */
+static void vescTask(void * pvParameters) {
+  MotorControls::VescDriver vesc {IOConstants::vescSerial};
+
+  static char vescPrintBuffer[256]; // Kept off the task stack; the log queue only stores this pointer, so it's reused every telemetry period
+
+  float erpm = 0.0f;  // ERPM target
+  float brake = 0.0f; // Brake current target in amps
+
+  const TickType_t telemetryPeriod = pdMS_TO_TICKS(1'000 / IOConstants::vescTelemetryFrequency);
+  const TickType_t reconnectPeriod = pdMS_TO_TICKS(1'000 / IOConstants::vescReconnectFrequency);
+  TickType_t lastRequest = xTaskGetTickCount() - reconnectPeriod; // Request telemetry on the first loop
+
+  while (true) {
+    if (IOConstants::vescBenchTest) {
+      readBenchCommand(erpm, brake);
+    } else if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(5)) == pdTRUE) {
+      erpm = MutexValues::commands.erpm;
+      brake = MutexValues::commands.brake;
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
+
+    // Send a command every iteration so the VESC timeout doesn't release the motor
+    vesc.update(erpm, brake);
+
+    // Each failed request waits for the full reply timeout, so poll slower while the VESC isn't responding
+    const TickType_t period = vesc.isConnected() ? telemetryPeriod : reconnectPeriod;
+
+    if (xTaskGetTickCount() - lastRequest >= period) {
+      lastRequest = xTaskGetTickCount();
+
+      // Share new telemetry with other tasks
+      if (vesc.updateTelemetry() && xSemaphoreTake(Mutexes::vescMutex, pdMS_TO_TICKS(5)) == pdTRUE) {
+        MutexValues::vescTelemetry = vesc.getTelemetry();
+        xSemaphoreGive(Mutexes::vescMutex);
+      }
+
+      if (IOConstants::motorDataToSerial) {
+        const MotorControls::vescTelemetry_t data = vesc.getTelemetry();
+
+        if (vesc.isConnected()) {
+          snprintf(
+            vescPrintBuffer,
+            sizeof(vescPrintBuffer),
+            "VESC | Target ERPM %.0f | Brake %.1f A | ERPM %.0f | Motor %.2f A | Input %.1f V | MOSFET %.1f C | Motor %.1f C | %s (%u)",
+            vesc.getTargetERPM(),
+            vesc.getTargetBrake(),
+            data.erpm,
+            data.motorCurrent,
+            data.inputVoltage,
+            data.tempMosfet,
+            data.tempMotor,
+            MotorControls::VescDriver::faultToString(data.fault),
+            static_cast<unsigned>(data.fault)
+          );
+        } else {
+          snprintf(vescPrintBuffer, sizeof(vescPrintBuffer), "VESC | No telemetry received");
+        }
+
+        Queues::logWrite(vescPrintBuffer);
+      }
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
+  }
+
+  vTaskDelete(nullptr);
+}
+
+
+/**
  * @brief Task used to update and run the state machine
  */
 static void stateMachineTask(void * pvParameters) {
@@ -134,6 +262,9 @@ static void stateMachineTask(void * pvParameters) {
     }
 
     stateMachine.runState();
+
+    // Block between iterations so lower priority tasks (RC, VESC, Serial monitor) can run
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 
   vTaskDelete(nullptr);

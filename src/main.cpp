@@ -13,7 +13,7 @@ void setup() {
   xTaskCreate(        // Create a task to log messages to the Serial monitor
     printTask,        // Task function to be called
     "Serial Monitor", // Task name as a string
-    128,              // Task size in words (1 word = 4 bytes)
+    256,              // Task size in words (1 word = 4 bytes)
     NULL,             // Parameters
     1,                // Task priority (0 - 9)
     NULL              // Task handle
@@ -22,9 +22,18 @@ void setup() {
   xTaskCreate( // Create a task to update the RC values from SBUS
     rcTask,
     "RC Updates",
-    128,
+    256,
     NULL,
     3,
+    NULL
+  );
+
+  xTaskCreate( // Create a task to command the VESC and read its telemetry over UART
+    vescTask,
+    "VESC UART Updates",
+    1024,
+    NULL,
+    2,
     NULL
   );
 
