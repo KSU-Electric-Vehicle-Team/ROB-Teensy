@@ -30,6 +30,8 @@ namespace Constants {
     static constexpr double updateFrequency = 80.0;
     static constexpr double ledBlinkFrequency = 1.0;
     static constexpr double telemetryFrequency = 8.0;
+    static constexpr double vescTelemetryFrequency = 10.0; ///< Rate in Hz to request VESC telemetry while the VESC is responding
+    static constexpr double vescReconnectFrequency = 1.0;  ///< Rate in Hz to request VESC telemetry while the VESC isn't responding
 
     static constexpr uint16_t driveEncoderPulsesPerRev = 600;
     
@@ -54,6 +56,7 @@ namespace Constants {
     
     static const bool telemetryToSerial = false;
     static const bool motorDataToSerial = false;
+    static const bool vescBenchTest = false; ///< Take VESC ERPM and brake commands from the Serial monitor instead of MutexValues::commands
   };
 }
 
