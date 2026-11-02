@@ -32,54 +32,6 @@ namespace RTOS {
     static TimerHandle_t blinkTimer;
   };
 
-
-  /**
-   * @brief Struct used to format Ethernet packets
-   */
-  typedef struct {
-    char buffer[128];         ///< Message buffer for the Ethernet connection
-    char state[8];            ///< Current state as a string
-
-    int32_t encoderCount;     ///< Encoder tick count since boot
-
-    int sequence;             ///< Packet sequence
-    int lastCommandSequence;  ///< Packet sequence
-    size_t sampleTime;        ///< Current time in miliseconds
-    size_t commandAge;        ///< Packet age in miliseconds
-
-    float driveRevolutions;   ///< Number of turns of the drive motor
-    float steeringAngle;      ///< Current steering angle
-    float oDriveTarget;       ///< ODrive target angle
-    float rpm;                ///< Drive motor RPM target
-
-    uint16_t throttle;        ///< RC throttle input
-    uint16_t steering;        ///< RC steering input
-
-    /**
-     * @brief Function used to format the buffer field of the packet_t struct
-     */
-    void format() {
-      snprintf(
-        this->buffer,
-        sizeof(this->buffer),
-        "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld",
-        this->sequence,
-        this->sampleTime,
-        this->state,
-        this->rpm,
-        this->steeringAngle,
-        this->oDriveTarget,
-        this->throttle,
-        this->steering,
-        this->driveRevolutions,
-        this->encoderCount,
-        this->commandAge,
-        this->lastCommandSequence
-      );
-    }
-  } telemetry_t;
-
-
   /**
    * @brief Struct used to format UDP autonomous commands
    */
