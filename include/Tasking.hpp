@@ -92,21 +92,26 @@ static void ethernetTask(void * pvParameters) {
     // Format telemetry packet.format()
     if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
 
+      // Build packet
       uint8_t txBuf[sizeof(Networking::Packet<Networking::TelemetryPayload>)];
 
+      uint64_t now = micros64();
+      setAge(MutexValues::telemetry.last_cmd, now);  // + the other stamps
+      MutexValues::sequence++;
       uint8_t len = buildPacket(Networking::MsgType::TELEMETRY,
                                     MutexValues::telemetry,
                                     MutexValues::bootId,
                                     MutexValues::sequence,
-                                    micros64(),
+                                    now,
                                     txBuf
                                     );
 
-      // send telemetry
+      // send packet
       ethernet.sendPacket(txBuf, len);
 
-      // if auto state, recieve telemetry, check packet.state to figure out
+      // recieve packet
       ethernet.receiveCommand();
+
       // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);
     }
