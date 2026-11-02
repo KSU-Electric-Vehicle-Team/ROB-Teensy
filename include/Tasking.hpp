@@ -92,29 +92,23 @@ static void ethernetTask(void * pvParameters) {
     // Format telemetry packet.format()
     if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
 
+      uint8_t txBuf[sizeof(Networking::Packet<Networking::TelemetryPayload>)];
+
+      uint8_t len = buildPacket(Networking::MsgType::TELEMETRY,
+                                    MutexValues::telemetry,
+                                    MutexValues::bootId,
+                                    MutexValues::sequence,
+                                    micros64(),
+                                    txBuf
+                                    );
 
       // send telemetry
-      // ethernet.sendPacket(buildPacket(Networking::MsgType::TELEMETRY,
-      //                               MutexValues::telemetry,
-      //                               MutexValues::bootId,
-      //                               MutexValues::sequence,
-      //                               micros64(),
-      //                               (uint8_t) sizeof(Networking::Packet<Networking::TelemetryPayload>)
-      //                               ),
-      //                     (uint8_t) sizeof(Networking::Packet<Networking::TelemetryPayload>));
+      ethernet.sendPacket(txBuf, len);
 
       // if auto state, recieve telemetry, check packet.state to figure out
       ethernet.receiveCommand();
-
       // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);
-    }
-
-    // set recieved values to MutexValues::commands
-    if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(15)) == pdTRUE) {
-      // MutexValues::commands.erpm = MutexValues::telemetry.rpm;
-      // MutexValues::commands.steering = MutexValues::telemetry.oDriveTarget;
-      xSemaphoreGive(Mutexes::commandMutex);
     }
   }
 }
