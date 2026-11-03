@@ -115,6 +115,8 @@ static void ethernetTask(void * pvParameters) {
       // Give mutex back
       xSemaphoreGive(Mutexes::telemetryMutex);
     }
+
+    vTaskDelay(pdMS_TO_TICKS(10)); // Delay task so other tasks can get the mutex
   }
 }
 
@@ -177,6 +179,8 @@ static void stateMachineTask(void * pvParameters) {
     }
 
     stateMachine.runState();
+
+    vTaskDelay(pdMS_TO_TICKS(10)); // Delay task so other tasks can get the mutex
   }
 
   vTaskDelete(nullptr);
