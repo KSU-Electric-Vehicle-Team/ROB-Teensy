@@ -21,6 +21,8 @@
 using namespace Constants;
 
 #include "Mutexes.hpp"
+#include "EthernetPacket.hpp"
+#include "PacketIO.hpp"
 using RTOS::Mutexes;
 using RTOS::MutexValues;
 
@@ -76,6 +78,49 @@ static void rcTask(void * pvParameters) {
 }
 
 
+static void ethernetTask(void * pvParameters) {
+  // Make ethernet object
+  IPAddress teensyIP {192, 168, 0, 177};
+  IPAddress panda {169, 254, 1, 10};
+  byte teensy[6] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+
+  Networking::EthernetEVT ethernet {teensyIP, panda, teensy};
+  // Setup ethernet
+  ethernet.setup();
+
+  while (true) {
+    // Format telemetry packet.format()
+    if (xSemaphoreTake(Mutexes::telemetryMutex, pdMS_TO_TICKS(20)) == pdTRUE) {
+
+      // Build packet
+      uint8_t txBuf[sizeof(Networking::Packet<Networking::TelemetryPayload>)];
+
+      uint64_t now = micros64();
+      setAge(MutexValues::telemetry.last_cmd, now);  // + the other stamps
+      MutexValues::sequence++;
+      uint8_t len = buildPacket(Networking::MsgType::TELEMETRY,
+                                    MutexValues::telemetry,
+                                    MutexValues::bootId,
+                                    MutexValues::sequence,
+                                    now,
+                                    txBuf
+                                    );
+
+      // send packet
+      ethernet.sendPacket(txBuf, len);
+
+      // recieve packet
+      ethernet.receiveCommand();
+
+      // Give mutex back
+      xSemaphoreGive(Mutexes::telemetryMutex);
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(10)); // Delay task so other tasks can get the mutex
+  }
+}
+
+
 /**
  * @brief Task used to update and run the state machine
  */
@@ -101,6 +146,7 @@ static void stateMachineTask(void * pvParameters) {
   });
 
   stateMachine.defineState(Signals::States::AUTO, [&] () { // Define AUTO state
+
   });
 
   stateMachine.defineState(Signals::States::ERROR, [&] () { // Define ERROR state
@@ -127,13 +173,14 @@ static void stateMachineTask(void * pvParameters) {
 
   while (true) {
     if (xSemaphoreTake(Mutexes::telemetryMutex, 0) == pdTRUE) {
-      // Copy the state as a string to the Panda telemetry
-      strcpy(MutexValues::pandaPacket.state, stateMachine.toString(stateMachine.getState()));
+      MutexValues::telemetry.state = static_cast<Networking::VehicleState>(stateMachine.getState());
 
       xSemaphoreGive(Mutexes::telemetryMutex); // Give the telemetry mutex
     }
 
     stateMachine.runState();
+
+    vTaskDelay(pdMS_TO_TICKS(10)); // Delay task so other tasks can get the mutex
   }
 
   vTaskDelete(nullptr);

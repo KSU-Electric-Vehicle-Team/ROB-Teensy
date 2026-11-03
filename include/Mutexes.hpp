@@ -15,8 +15,10 @@
 
 #include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
+#include <EVT_Ethernet.hpp>
 
 #include "timers.h"
+#include "EthernetPacket.hpp"
 
 namespace RTOS {
   /**
@@ -29,45 +31,6 @@ namespace RTOS {
 
     static TimerHandle_t blinkTimer;
   };
-
-
-  /**
-   * @brief Struct used to format Ethernet packets
-   */
-  typedef struct {
-    char buffer[128];       ///< Message buffer for the Ethernet connection
-    char state[8];          ///< Current state as a string
-
-    int32_t encoderCount;   ///< Encoder tick count since boot
-
-    float driveRevolutions; ///< Number of turns of the drive motor
-    float steeringAngle;    ///< Current steering angle
-    float oDriveTarget;     ///< ODrive target angle
-    float rpm;              ///< Drive motor RPM target
-
-    uint16_t throttle;      ///< RC throttle input
-    uint16_t steering;      ///< RC steering input
-
-    /**
-     * @brief Function used to format the buffer field of the packet_t struct
-     */
-    void format() {
-      snprintf(
-        this->buffer,
-        sizeof(this->buffer),
-        "%s,%0.2f,%0.2f,%0.2f,%u,%u,%0.6f,%ld",
-        this->state,
-        this->rpm,
-        this->steeringAngle,
-        this->oDriveTarget,
-        this->throttle,
-        this->steering,
-        this->driveRevolutions,
-        this->encoderCount
-      );
-    }
-  } telemetry_t;
-
 
   /**
    * @brief Struct used to format UDP autonomous commands
@@ -136,9 +99,13 @@ namespace RTOS {
    */
   struct MutexValues {
     static transmitter_t transmitterValues;
-    static telemetry_t pandaPacket;
+    static Networking::TelemetryPayload telemetry;
+    static Networking::InfoPayload info;
+    static Networking::HealthPayload health;
     static command_t commands;
 
+    static uint32_t sequence;
+    static uint32_t bootId;
     static bool ledState;
   };
 
@@ -151,10 +118,14 @@ namespace RTOS {
 
   // Structs for value packets
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
-  telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet
+  Networking::TelemetryPayload MutexValues::telemetry;         ///< Values to send to the Panda packet
+  Networking::InfoPayload MutexValues::info;
+  Networking::HealthPayload MutexValues::health;
   command_t MutexValues::commands;              ///< Values for the autonomous commands
 
   // Other mutex values
+  uint32_t MutexValues::bootId;
+  uint32_t MutexValues::sequence = 0;
   bool MutexValues::ledState = false;
 }
 
