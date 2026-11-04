@@ -15,6 +15,7 @@
 
 #include <EVT_StateMachine.hpp>
 #include <EVT_RC.hpp>
+#include <EVT_VescUART.hpp>
 
 #include "timers.h"
 
@@ -26,6 +27,7 @@ namespace RTOS {
     static SemaphoreHandle_t telemetryMutex;
     static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t rcMutex;
+    static SemaphoreHandle_t vescMutex;
 
     static TimerHandle_t blinkTimer;
   };
@@ -76,8 +78,8 @@ namespace RTOS {
     char stateString[8];
 
     float steering;
-    float brake;
-    float erpm;
+    float brake;         ///< Drive motor brake current in amps
+    float erpm;          ///< Drive motor target in electrical RPM
 
     bool emergency;
   } command_t;
@@ -138,6 +140,7 @@ namespace RTOS {
     static transmitter_t transmitterValues;
     static telemetry_t pandaPacket;
     static command_t commands;
+    static MotorControls::vescTelemetry_t vescTelemetry;
 
     static bool ledState;
   };
@@ -146,6 +149,7 @@ namespace RTOS {
   SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex(); ///< Mutex for Ethernet telemetry values
   SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();   ///< Mutex for motor commands
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();        ///< Mutex for RC values
+  SemaphoreHandle_t Mutexes::vescMutex = xSemaphoreCreateMutex();      ///< Mutex for VESC telemetry values
 
   TimerHandle_t Mutexes::blinkTimer;                                   ///< Timer used to blink the onboard LED
 
@@ -153,6 +157,9 @@ namespace RTOS {
   transmitter_t MutexValues::transmitterValues; ///< Values from the RC transmitter
   telemetry_t MutexValues::pandaPacket;         ///< Values to send to the Panda packet
   command_t MutexValues::commands;              ///< Values for the autonomous commands
+
+  // Motor controller values
+  MotorControls::vescTelemetry_t MutexValues::vescTelemetry; ///< Telemetry received from the VESC
 
   // Other mutex values
   bool MutexValues::ledState = false;
