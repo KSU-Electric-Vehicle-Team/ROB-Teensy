@@ -138,7 +138,8 @@ static void readBenchCommand(float & erpm, float & brake) {
 static void vescTask(void * pvParameters) {
   MotorControls::VescDriver vesc {IOConstants::vescSerial};
 
-  static char vescPrintBuffer[256]; // Kept off the task stack; the log queue only stores this pointer, so it's reused every telemetry period
+  // Kept off the task stack. The log queue only stores this pointer, so it's reused every telemetry period
+  static char vescPrintBuffer[256];
 
   float erpm = 0.0f;  // ERPM target
   float brake = 0.0f; // Brake current target in amps
@@ -178,7 +179,8 @@ static void vescTask(void * pvParameters) {
           snprintf(
             vescPrintBuffer,
             sizeof(vescPrintBuffer),
-            "VESC | Target ERPM %.0f | Brake %.1f A | ERPM %.0f | Motor %.2f A | Input %.1f V | MOSFET %.1f C | Motor %.1f C | %s (%u)",
+            "VESC | Target ERPM %.0f | Brake %.1f A | ERPM %.0f | Motor %.2f A | Input %.1f V"
+            " | MOSFET %.1f C | Motor %.1f C | %s (%u)",
             vesc.getTargetERPM(),
             vesc.getTargetBrake(),
             data.erpm,

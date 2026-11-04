@@ -22,8 +22,8 @@ namespace Constants {
    */
   struct ControlConstants {
     static constexpr float vescMaxERPM = 10'000.0f;       ///< Maximum forward ERPM command sent to the VESC
-    static constexpr float vescMaxReverseERPM = 2'000.0f; ///< Maximum reverse ERPM command sent to the VESC (as a positive value)
-    static constexpr float vescMinERPM = 900.0f;          ///< Smallest ERPM sent as a speed command (match VESC Tool's Speed PID Minimum ERPM)
+    static constexpr float vescMaxReverseERPM = 2'000.0f; ///< Maximum reverse ERPM command sent to the VESC
+    static constexpr float vescMinERPM = 900.0f;          ///< Smallest ERPM sent, matching VESC Tool's Speed PID
     static constexpr float vescMaxBrake = 20.0f;          ///< Maximum brake current in amps sent to the VESC
   };
 }

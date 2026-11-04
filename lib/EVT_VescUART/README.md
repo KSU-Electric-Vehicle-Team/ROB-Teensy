@@ -9,7 +9,7 @@ With it, the Teensy can:
   - Set a brake current
   - Read the MOSFET and motor temperatures, motor and input current, duty cycle, measured ERPM, input voltage, and fault code
 
-It replaces the old `EVT_VescDriver` from the deprecated repository. The packet handling (VescUart) is the same, but the structure has changed to fit FreeRTOS:
+It replaces the old `EVT_VescDriver` by Noah Gebremariam from the deprecated repository. The packet handling (VescUart) is the same, but the structure has changed to fit FreeRTOS:
   - **RC mapping moves out of the driver:** the old driver mapped RC channels to throttle and brake itself. Now the driver only takes an ERPM and a brake target. Mapping the RC sticks belongs in the state machine's RC state, which should write `MutexValues::commands`. That isn't implemented yet, so outside bench test mode `vescTask` reads zeros and the motor coasts.
   - **One task owns the VESC:** the old driver was called from wherever it was needed. Now only `vescTask` touches the VESC, and other tasks read the shared copy of the telemetry.
   - **Fault strings without heap use:** `faultToString()` returns a `const char *` instead of an Arduino `String`. It also knows the newer fault codes (28 to 33) that VescUart's enum doesn't name.

@@ -11,7 +11,11 @@
  * the limits in ControlConstants, and reads telemetry such as the MOSFET and
  * motor temperatures so that other RTOS tasks can use it.
  *
+ * The class is based on the EVT_VescDriver written by Noah Gebremariam for the
+ * previous embedded codebase.
+ *
  * @author FluenceCodez
+ * @author Noah Gebremariam
  * @date   October 28, 2026
 *//*---------------------------------------------------------------------------*/
 
@@ -49,8 +53,8 @@ namespace MotorControls {
    */
   class VescDriver {
     private:
-      static const uint32_t replyTimeout = 20UL;    // Maximum time in milliseconds to wait for a telemetry reply
-      static const size_t telemetryTimeout = 500UL; // Maximum time in milliseconds between replies before the VESC counts as disconnected
+      static const uint32_t replyTimeout = 20UL;    // Time in milliseconds to wait for a telemetry reply
+      static const size_t telemetryTimeout = 500UL; // Time in milliseconds without a reply before disconnecting
 
       HardwareSerial & serial;                      // UART connected to the VESC
       VescUart vesc {replyTimeout};                 // VescUart instance used to build and parse VESC packets
@@ -100,8 +104,9 @@ namespace MotorControls {
       /**
        * @brief Requests telemetry from the VESC and stores it if a valid reply arrives
        *
-       * @note VescUart busy-waits for the reply without yielding, so this keeps the CPU for up to 20 ms.
-       *       Higher priority tasks can still preempt it, but lower priority tasks can't run until it returns.
+       * @note VescUart busy-waits for the reply without yielding, so this keeps the CPU for up to
+       *       20 ms. Higher priority tasks can still preempt it, but lower priority tasks can't run
+       *       until it returns.
        *
        * @return Whether new telemetry values were received
        */

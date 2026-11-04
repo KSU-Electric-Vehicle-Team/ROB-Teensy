@@ -25,7 +25,7 @@ namespace MotorControls {
     } else if (std::fabs(targetERPM) >= ControlConstants::vescMinERPM) {
       vesc.setRPM(targetERPM);
     } else {
-      // The VESC brakes at zero duty on speed setpoints below its minimum ERPM, so coast with zero current instead
+      // The VESC brakes at zero duty below its minimum ERPM, so coast with zero current instead
       targetERPM = 0.0f;
       vesc.setCurrent(0.0f);
     }
