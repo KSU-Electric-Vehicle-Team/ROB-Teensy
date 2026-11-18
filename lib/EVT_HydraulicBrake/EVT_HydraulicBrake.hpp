@@ -2,6 +2,7 @@
 #define EVT_HydraulicBrake
 
 #include <arduino_freertos.h>
+#include <bits/stdc++.h>
 
 namespace MotorControls{
   class HydraulicBrake {
@@ -20,7 +21,7 @@ namespace MotorControls{
 
       bool home();
 
-      void driveMotor(float brakePercent);
+      bool driveMotor(float brakePercent);
   };
 }
 
