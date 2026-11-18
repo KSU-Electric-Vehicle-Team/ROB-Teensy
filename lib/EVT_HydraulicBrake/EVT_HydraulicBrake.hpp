@@ -1,7 +1,7 @@
 #ifndef EVT_HydraulicBrake
 #define EVT_HydraulicBrake
 
-#include <Arduino.h>
+#include <arduino_freertos.h>
 
 namespace MotorControls{
   class HydraulicBrake {
