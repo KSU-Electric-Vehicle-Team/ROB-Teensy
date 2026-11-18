@@ -28,6 +28,15 @@ void setup() {
     NULL
   );
 
+  xTaskCreate( // Create a task to handle the hydraulic brake
+    hydraulicBrakeTask,
+    "Hydraulic Brake",
+    256,
+    NULL,
+    3,
+    NULL
+  );
+
   xTaskCreate( // Create a task to handle the state machine
     stateMachineTask,
     "State Machine Task",

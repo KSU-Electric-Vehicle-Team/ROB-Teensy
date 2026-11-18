@@ -1,6 +1,8 @@
 #ifndef EVT_HydraulicBrake
 #define EVT_HydraulicBrake
 
+#include <Arduino.h>
+
 namespace MotorControls{
   class HydraulicBrake {
     private:
@@ -8,15 +10,17 @@ namespace MotorControls{
       int currentPositionSteps = 0;
 
       void stepperMotor(int steps, bool direction);
+
       void pulseStep();
-      bool isLimitHit();
+
+      bool isLimitHit() const;
 
     public:
       void setup();
 
       bool home();
 
-      bool update(float brakePercent);
+      void driveMotor(float brakePercent);
   };
 }
 

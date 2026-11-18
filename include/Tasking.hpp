@@ -16,6 +16,7 @@
 *//*---------------------------------------------------------------------------*/
 
 #include <EVT_RC.hpp>
+#include <EVT_HydraulicBrake.hpp>
 
 #include <ConversionConstants.hpp>
 using namespace Constants;
@@ -75,6 +76,27 @@ static void rcTask(void * pvParameters) {
   vTaskDelete(nullptr);
 }
 
+
+/**
+ * @brief Task used to update and manage stepper motor
+ */
+static void hydraulicBrakeTask(void * pvParameters) {
+  MotorControls::HydraulicBrake hydraulicBrake;
+
+  hydraulicBrake.setup();
+
+  while (true) {
+    if (xSemaphoreTake(Mutexes::commandMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+      hydraulicBrake.driveMotor(MutexValues::commands.brake);
+
+      xSemaphoreGive(Mutexes::commandMutex);
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(1'000 / IOConstants::updateFrequency));
+  }
+
+  vTaskDelete(nullptr);
+}
 
 /**
  * @brief Task used to update and run the state machine
