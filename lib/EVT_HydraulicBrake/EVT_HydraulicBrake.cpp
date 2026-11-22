@@ -1,8 +1,12 @@
 #include <EVT_HydraulicBrake.hpp>
 
 #include <ControlConstants.hpp>
+#include <ConversionConstants.hpp>
 #include <IOConstants.hpp>
 #include <TransmitterConstants.hpp>
+
+#include "Mutexes.hpp"
+using RTOS::MutexValues;
 
 namespace MotorControls{
 
@@ -13,14 +17,16 @@ namespace MotorControls{
 
     digitalWrite(Constants::IOConstants::dynamicBrakePulsePin, arduino::LOW);
     digitalWrite(Constants::IOConstants::dynamicBrakeDirPin, arduino::LOW);
+
+    home();
   }
 
 
   void HydraulicBrake::pulseStep() {
     digitalWrite(Constants::IOConstants::dynamicBrakePulsePin, arduino::HIGH);
-    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeStepPulseMs));
+    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeStepPulseUs * Constants::ConversionConstants::microsToSec * Constants::ConversionConstants::secToMillis));
     digitalWrite(Constants::IOConstants::dynamicBrakePulsePin, arduino::LOW);
-    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeStepDelayMs));
+    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeStepDelayUs * Constants::ConversionConstants::microsToSec * Constants::ConversionConstants::secToMillis));
   }
 
 
@@ -34,10 +40,10 @@ namespace MotorControls{
       : !Constants::ControlConstants::dynamicBrakeForwardDirLevel;
 
     digitalWrite(Constants::IOConstants::dynamicBrakeDirPin, dirLevel ? arduino::HIGH : arduino::LOW);
-    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeDirSetupMs));
+    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeDirSetupUs * Constants::ConversionConstants::microsToSec * Constants::ConversionConstants::secToMillis));
 
     for (int i = 0; i < steps; i++) {
-      if (!directionForward && isLimitHit()) {
+      if (!directionForward && MutexValues::hydraulicBrakeHomed) {
         currentPositionSteps = 0;
         break;
       }
@@ -51,37 +57,27 @@ namespace MotorControls{
     }
   }
 
-
-  bool HydraulicBrake::isLimitHit() const {
-    const int state = digitalRead(Constants::IOConstants::dynamicBrakeLimitSwitchPin);
-    return Constants::ControlConstants::dynamicBrakeLimitActiveLow ? state == arduino::LOW : state == arduino::HIGH;
-  }
-
-
-  bool HydraulicBrake::home() {
+  void HydraulicBrake::home() {
     digitalWrite(Constants::IOConstants::dynamicBrakeDirPin, Constants::ControlConstants::dynamicBrakeForwardDirLevel ? arduino::LOW : arduino::HIGH);
-    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeDirSetupMs));
+    vTaskDelay(pdMS_TO_TICKS(Constants::ControlConstants::dynamicBrakeDirSetupUs * Constants::ConversionConstants::microsToSec * Constants::ConversionConstants::secToMillis));
 
     for (int i = 0; i < Constants::ControlConstants::dynamicBrakeHomeMaxSteps; i++) {
-      if (isLimitHit()) {
+      if (MutexValues::hydraulicBrakeHomed) {
         currentPositionSteps = 0;
         stepperMotor(Constants::ControlConstants::dynamicBrakePedalOffsetSteps, true);
-        homed = true;
-        return true;
+
+        return; // exit function
       }
 
       pulseStep();
     }
-
-    homed = false;
-    return false;
   }
 
 
   bool HydraulicBrake::driveMotor(float brakePercent) {
     brakePercent = std::clamp(brakePercent, 0.0f, 1.0f);
 
-    if (!homed && !home()) {
+    if (!MutexValues::hydraulicBrakeHomed) {
       if (Serial) {
         Serial.println("Dynamic brake failed to home");
       }

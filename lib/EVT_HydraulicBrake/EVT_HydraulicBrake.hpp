@@ -7,19 +7,16 @@
 namespace MotorControls{
   class HydraulicBrake {
     private:
-      bool homed = false;
       int currentPositionSteps = 0;
 
       void stepperMotor(int steps, bool direction);
 
       void pulseStep();
 
-      bool isLimitHit() const;
-
     public:
       void setup();
 
-      bool home();
+      void home();
 
       bool driveMotor(float brakePercent);
   };
