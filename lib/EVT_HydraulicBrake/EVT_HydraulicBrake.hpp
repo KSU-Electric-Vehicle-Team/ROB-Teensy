@@ -9,7 +9,7 @@ namespace MotorControls{
     private:
       int currentPositionSteps = 0;
 
-      void stepperMotor(int steps, bool direction);
+      void moveSteps(int steps, bool direction);
 
       void pulseStep();
 

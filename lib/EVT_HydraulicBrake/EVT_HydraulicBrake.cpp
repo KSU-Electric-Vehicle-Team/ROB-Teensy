@@ -30,7 +30,7 @@ namespace MotorControls{
   }
 
 
-  void HydraulicBrake::stepperMotor(int steps, bool directionForward) {
+  void HydraulicBrake::moveSteps(int steps, bool directionForward) {
     if (steps <= 0) {
       return;
     }
@@ -64,7 +64,7 @@ namespace MotorControls{
     for (int i = 0; i < Constants::ControlConstants::dynamicBrakeHomeMaxSteps; i++) {
       if (MutexValues::hydraulicBrakeHomed) {
         currentPositionSteps = 0;
-        stepperMotor(Constants::ControlConstants::dynamicBrakePedalOffsetSteps, true);
+        moveSteps(Constants::ControlConstants::dynamicBrakePedalOffsetSteps, true);
 
         return; // exit function
       }
@@ -95,9 +95,9 @@ namespace MotorControls{
     const int deltaSteps = targetSteps - currentPositionSteps;
 
     if (deltaSteps > 0) {
-      stepperMotor(deltaSteps, true);
+      moveSteps(deltaSteps, true);
     } else if (deltaSteps < 0) {
-      stepperMotor(-deltaSteps, false);
+      moveSteps(-deltaSteps, false);
     }
 
     return true;
