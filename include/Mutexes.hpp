@@ -27,6 +27,8 @@ namespace RTOS {
     static SemaphoreHandle_t commandMutex;
     static SemaphoreHandle_t rcMutex;
 
+    static SemaphoreHandle_t limitSwitch;
+
     static TimerHandle_t blinkTimer;
   };
 
@@ -140,12 +142,15 @@ namespace RTOS {
     static command_t commands;
 
     static bool ledState;
+    static bool hydraulicBrakeHomed;
   };
 
 
   SemaphoreHandle_t Mutexes::telemetryMutex = xSemaphoreCreateMutex(); ///< Mutex for Ethernet telemetry values
   SemaphoreHandle_t Mutexes::commandMutex = xSemaphoreCreateMutex();   ///< Mutex for motor commands
   SemaphoreHandle_t Mutexes::rcMutex = xSemaphoreCreateMutex();        ///< Mutex for RC values
+
+  SemaphoreHandle_t Mutexes::limitSwitch = xSemaphoreCreateBinary();   ///< Binary for limit switch on hydraulic brake
 
   TimerHandle_t Mutexes::blinkTimer;                                   ///< Timer used to blink the onboard LED
 
@@ -156,6 +161,7 @@ namespace RTOS {
 
   // Other mutex values
   bool MutexValues::ledState = false;
+  bool MutexValues::hydraulicBrakeHomed = false;
 }
 
 #endif // MUTEXES

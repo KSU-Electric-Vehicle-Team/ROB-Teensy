@@ -54,6 +54,8 @@ void setup() {
     blinkCallback                                                                         // Callback function
   );
 
+  // Attach the limit switch GPIO pin to the ISR
+  attachInterrupt(digitalPinToInterrupt(IOConstants::dynamicBrakeLimitSwitchPin), limitSwitchISR, arduino::RISING);
 
   // Start the timer
   xTimerStart(Mutexes::blinkTimer, portMAX_DELAY);

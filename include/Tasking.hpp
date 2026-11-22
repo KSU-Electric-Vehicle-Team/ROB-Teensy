@@ -27,6 +27,14 @@ using RTOS::MutexValues;
 
 
 /**
+ * @brief ISR used to check if hydraulic brake stepper motor is homed
+ */
+static void limitSwitchISR() {
+  // Toggle the brake homed state
+  MutexValues::hydraulicBrakeHomed = !MutexValues::hydraulicBrakeHomed;
+}
+
+/**
  * @brief Timer callback used to blink the onboard LED
  */
 static void blinkCallback(TimerHandle_t xTimer) {
@@ -36,7 +44,6 @@ static void blinkCallback(TimerHandle_t xTimer) {
   // Write the LED state to the LED pin
   digitalWriteFast(IOConstants::ledBuiltIn, MutexValues::ledState ? arduino::HIGH : arduino::LOW);
 }
-
 
 /**
  * @brief Task used to print messages from the log queue to Serial monitor
