@@ -31,7 +31,7 @@ using RTOS::MutexValues;
  */
 static void limitSwitchISR() {
   // Toggle the brake homed state
-  MutexValues::hydraulicBrakeHomed = !MutexValues::hydraulicBrakeHomed;
+  MutexValues::hydraulicBrakeHomed = true;
 }
 
 /**
